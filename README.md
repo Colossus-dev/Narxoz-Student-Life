@@ -1,3 +1,4 @@
 # Narxoz-Student-Life
 Diploma Project
-Мен Косылдым
+Мен Косылдым <br>
+updated my Username to Aqgulim
