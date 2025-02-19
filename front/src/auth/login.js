@@ -46,7 +46,7 @@ export default function SignIn() {
                 >
                     <Avatar sx={{ m: 1, width: 64, height: 64 }} src="/favicon.ico" alt="Logo" />
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Narxoz
                     </Typography>
                     <Box
                         sx={{
