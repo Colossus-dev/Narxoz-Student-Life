@@ -130,6 +130,36 @@
       <path value="$PROJECT_DIR$/back/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/back/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/back/vendor/laravel/ui" />
+      <path value="$PROJECT_DIR$/back/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/actions" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/filament" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/forms" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/infolists" />
+      <path value="$PROJECT_DIR$/back/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/back/vendor/league/csv" />
+      <path value="$PROJECT_DIR$/back/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/notifications" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/support" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/tables" />
+      <path value="$PROJECT_DIR$/back/vendor/filament/widgets" />
+      <path value="$PROJECT_DIR$/back/vendor/symfony/html-sanitizer" />
+      <path value="$PROJECT_DIR$/back/vendor/danharrin/livewire-rate-limiting" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/invade" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/color" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/laravel-package-tools" />
+      <path value="$PROJECT_DIR$/back/vendor/danharrin/date-format-converter" />
+      <path value="$PROJECT_DIR$/back/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/back/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/back/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/back/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/back/vendor/ryangjchandler/blade-capture-directive" />
+      <path value="$PROJECT_DIR$/back/vendor/blade-ui-kit/blade-heroicons" />
+      <path value="$PROJECT_DIR$/back/vendor/blade-ui-kit/blade-icons" />
+      <path value="$PROJECT_DIR$/back/vendor/kirschbaum-development/eloquent-power-joins" />
+      <path value="$PROJECT_DIR$/back/vendor/openspout/openspout" />
+      <path value="$PROJECT_DIR$/back/vendor/livewire/livewire" />
+      <path value="$PROJECT_DIR$/back/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/back/vendor/anourvalar/eloquent-serialize" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

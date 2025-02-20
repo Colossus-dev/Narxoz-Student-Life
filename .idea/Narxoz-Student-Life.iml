@@ -12,6 +12,36 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/laravel/ui" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/anourvalar/eloquent-serialize" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/blade-ui-kit/blade-heroicons" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/blade-ui-kit/blade-icons" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/danharrin/date-format-converter" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/danharrin/livewire-rate-limiting" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/doctrine/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/doctrine/event-manager" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/actions" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/filament" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/forms" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/infolists" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/notifications" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/support" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/tables" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/filament/widgets" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/kirschbaum-development/eloquent-power-joins" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/league/csv" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/livewire/livewire" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/masterminds/html5" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/openspout/openspout" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/ryangjchandler/blade-capture-directive" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/color" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/invade" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-package-tools" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/html-sanitizer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
