@@ -21,11 +21,14 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
+    /**
+     * @throws \Exception
+     */
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
-            ->id('admin')
+            ->id(1)
             ->path('admin')
             ->login()
             ->colors([
@@ -51,11 +54,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                RoleMiddleware::class
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RoleMiddleware::class
+                RoleMiddleware::class.':admin',
             ]);
     }
 }

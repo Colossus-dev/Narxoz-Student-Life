@@ -14,17 +14,41 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,...$rolenames): Response
+    public function handle(Request $request, Closure $next, ...$rolenames): Response
     {
-        if(Auth::check()) {
-            foreach ($rolenames as $rolename)
-                if (Auth::user()->role->name == $rolename)
-                    return $next($request);
+        // Проверяем, авторизован ли пользователь
+        if (!Auth::check()) {
+            return $this->handleErrorResponse($request, 'Доступ запрещен. Требуется авторизация.');
         }
-        else{
-            return redirect()->route('courses.index');
-        }
-        return response()->view('adm.errors.noperm');
 
+        // Получаем пользователя
+        $user = Auth::user();
+
+        // Проверяем, есть ли у пользователя роль
+        if (!$user->role) {
+            return $this->handleErrorResponse($request, 'Доступ запрещен. У вас нет назначенной роли.');
+        }
+
+        // Проверяем, соответствует ли роль пользователя нужным ролям
+        if (!in_array($user->role->name, $rolenames)) {
+            return $this->handleErrorResponse($request, 'Доступ запрещен. У вас недостаточно прав.');
+        }
+
+        return $next($request);
+    }
+
+    /**
+     * Обрабатывает ошибки доступа
+     */
+    private function handleErrorResponse(Request $request, string $message)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => $message
+            ], 403);
+        }
+
+        return response()->view('errors.forbidden', ['message' => $message], 403);
     }
 }
