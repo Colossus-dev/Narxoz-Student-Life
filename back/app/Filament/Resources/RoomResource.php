@@ -47,6 +47,12 @@ class RoomResource extends Resource
                 TextInput::make('occupied')
                     ->label('Occupied')
                     ->default(0),
+                TextInput::make('price')
+                    ->label('Price')
+                    ->numeric()
+                    ->minValue(0)
+                    ->step(0.01)
+                    ->required(),
             ]);
     }
 
@@ -60,6 +66,8 @@ class RoomResource extends Resource
                 TextColumn::make('room_number')->label('Room Number')->sortable(),
                 TextColumn::make('capacity')->label('Capacity')->sortable(),
                 TextColumn::make('occupied')->label('Occupied')->sortable(),
+                TextColumn::make('price')->label('Price')->sortable(),
+
                 TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
             ])
             ->filters([])

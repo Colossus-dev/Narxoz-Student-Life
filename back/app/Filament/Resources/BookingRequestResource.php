@@ -6,9 +6,13 @@ use App\Models\BookingRequest;
 use App\Models\Room;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -67,6 +71,30 @@ class BookingRequestResource extends Resource
                     ])
                     ->default('pending')
                     ->required(),
+                Select::make('payment_status')
+                    ->label('Payment Status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'paid' => 'Paid',
+                        'failed' => 'Failed',
+                    ])
+                    ->default('pending')
+                    ->required(),
+
+                Toggle::make('contract_signed')
+                    ->label('Contract Signed')
+                    ->default(false),
+
+                ViewField::make('payment_qr')
+                    ->label('Kaspi QR Code')
+                    ->view('admin.partials.kaspi_qr'),
+
+//                Textarea::make('contract_data')
+//                    ->label('Contract Data')
+//                    ->helperText('Enter the details of the contract.')
+//                    ->rows(5)
+//                    ->columnSpanFull()
+//                    ->visible(fn ($record) => $record->payment_status === 'paid')
             ]);
     }
 
@@ -80,6 +108,13 @@ class BookingRequestResource extends Resource
                 TextColumn::make('city')->label('City')->sortable(),
                 TextColumn::make('privileges')->label('Privileges')->sortable(),
                 TextColumn::make('status')->label('Status')->sortable(),
+                TextColumn::make('payment_status')->label('Payment Status')->sortable(),
+                BooleanColumn::make('contract_signed')->label('Contract Signed'),
+                TextColumn::make('payment_qr_url')
+                    ->label('Kaspi QR')
+                    ->formatStateUsing(fn($state) => $state ? '<a href="'.$state.'" target="_blank">Оплатить</a>' : 'Не сгенерировано')
+                    ->html(),
+
                 TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
             ])
             ->filters([])
