@@ -19,4 +19,10 @@ class Room extends Model
     {
         return $this->hasMany(BookingRequest::class);
     }
+
+    public function getOccupiedAttribute()
+    {
+        return $this->bookingRequests()->count();
+    }
+
 }
