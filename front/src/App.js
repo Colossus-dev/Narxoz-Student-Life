@@ -1,30 +1,32 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Button, Container, Box, Typography } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Header from "./components/Header";
+import LoginPage from './auth/login';
+import RegisterPage from './auth/register';
 
-import LoginPage from './auth/login';  // Import the Login Page Component
-import RegisterPage from './auth/register';  // Import the Register Page Component
 
 const theme = createTheme({
     typography: {
-        fontFamily: 'Gotham Medium, Arial, sans-serif',
+        fontFamily: "'Montserrat', Arial, sans-serif",
     },
 });
 
 function App() {
-    const navigate = useNavigate();  // Hook to navigate programmatically
+    const navigate = useNavigate();
 
     const handleSignInClick = () => {
-        navigate('/login');  // Navigate to login page
+        navigate('/login');
     };
 
     const handleRegisterClick = () => {
-        navigate('/register');  // Navigate to register page
+        navigate('/register');
     };
 
     return (
         <ThemeProvider theme={theme}>
+            <Header />
             <Container component="main" maxWidth="xs">
                 <Box
                     sx={{
@@ -44,7 +46,7 @@ function App() {
                             color="primary"
                             fullWidth
                             sx={{ mb: 2 }}
-                            onClick={handleSignInClick}  // Trigger navigation on Sign In click
+                            onClick={handleSignInClick}
                         >
                             Sign In
                         </Button>
@@ -52,7 +54,7 @@ function App() {
                             variant="outlined"
                             color="secondary"
                             fullWidth
-                            onClick={handleRegisterClick}  // Trigger navigation on Register click
+                            onClick={handleRegisterClick}
                         >
                             Register
                         </Button>
@@ -63,18 +65,17 @@ function App() {
     );
 }
 
-// App Component wrapped with Router for routing
+// Оборачиваем App в Router
 function AppWithRouter() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<App />} />  {/* Main page with buttons */}
-                <Route path="/login" element={<LoginPage />} />  {/* Login Page */}
-                <Route path="/register" element={<RegisterPage />} />  {/* Register Page */}
+                <Route path="/" element={<App />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
             </Routes>
         </Router>
     );
 }
 
 export default AppWithRouter;
-
