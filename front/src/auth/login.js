@@ -34,7 +34,7 @@ function Copyright() {
 export default function SignIn() {
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs" sx = {{alignItems: 'center', justifyContent: 'center'}}>
                 <CssBaseline />
                 <Box
                     sx={{

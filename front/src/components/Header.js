@@ -42,7 +42,7 @@ const Header = () => {
                 </Box>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                     <MenuItem component={Link} to="/profile">Профиль</MenuItem>
-                    <MenuItem onClick={handleClose}>Выйти</MenuItem>
+                    <MenuItem component={Link} to = "/login" onClick={handleClose}>Выйти</MenuItem>
                 </Menu>
             </Toolbar>
         </AppBar>
