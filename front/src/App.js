@@ -4,7 +4,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "./components/Header";
 import LoginPage from './auth/login';
 import RegisterPage from './auth/register';
-import HomePage from './pages/HomePage'; // Импортируем главную страницу
+import HomePage from './pages/HomePage';
+import ProfilePage from './pages/Profile';
+import BookingPage from './pages/Booking';
+import MyBookingsPage from './pages/MyBookings';
 
 const theme = createTheme({
     typography: {
@@ -16,7 +19,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <Header />
-            <HomePage /> {/* Подключаем главную страницу под Header */}
+            <HomePage />
         </ThemeProvider>
     );
 }
@@ -29,6 +32,9 @@ function AppWithRouter() {
                 <Route path="/" element={<App />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/booking" element={<BookingPage />} />
+                <Route path="/my-bookings" element={<MyBookingsPage />} />
             </Routes>
         </Router>
     );

@@ -34,7 +34,7 @@ function Copyright() {
 export default function SignIn() {
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs" sx = {{alignItems: 'center', justifyContent: 'center'}}>
+            <Container component="main" maxWidth="xs" sx={{ alignItems: 'center', justifyContent: 'center' }}>
                 <CssBaseline />
                 <Box
                     sx={{
@@ -66,8 +66,7 @@ export default function SignIn() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            sx = {{ mb:2}}
-
+                            sx={{ mb: 2 }}
                         />
                         <TextField
                             margin="normal"
@@ -84,41 +83,44 @@ export default function SignIn() {
                                         borderWidth: '0.5px',
                                     },
                                 },
-                            }}                        />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
+                            }}
                         />
+                        <Box display="flex" alignItems="center" justifyContent="space-between" mb={-1}>
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label="Remember me"
+                            />
+                        </Box>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{
-                                mt: 3,
+                                mt: 2,
                                 mb: 2,
                                 bgcolor: '#D50032', '&:hover': { bgcolor: 'darkred' },
                                 fontFamily: 'Gotham Medium, Arial, sans-serif',
-                                borderRadius: 3
+                                borderRadius: 1
                             }}
                         >
                             Sign In
                         </Button>
-                        <Grid container>
-                            <Grid item xs>
+                        <Grid container justifyContent="space-between" alignItems="center">
+                            <Grid item>
                                 <Link href="#" variant="body2">
                                     Forgot password?
                                 </Link>
                             </Grid>
-                            <Grid item>
+                            <Grid item display="flex" alignItems="center" gap={1}>
+                                <Typography variant="body2">Don't have an account?</Typography>
                                 <Link href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
+                                    Sign Up
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
-                <Box mt={8}>
-                </Box>
+                <Box mt={8}></Box>
             </Container>
         </ThemeProvider>
     );
