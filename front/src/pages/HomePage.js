@@ -77,7 +77,7 @@ const HomePage = () => {
             </h1>
 
             {/* Слайдер */}
-            <div className="w-full mb-20">
+            <div className="w-full mb-16">
                 <Slider {...settings}>
                     {slideImages.map((src, index) => (
                         <div key={index} className="w-full h-[550px] flex items-center justify-center">
@@ -90,13 +90,13 @@ const HomePage = () => {
             {/* Контент блоки */}
             <div className="flex flex-col gap-12 mb-20">
                 {contentData.map((item, index) => (
-                    <div key={index} className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center gap-12`}>
+                    <div key={index} className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center gap-20`}>
                         <img src={item.image} alt={`Изображение ${index + 1}`} className="w-[500px] h-[350px] object-cover flex-shrink-0" />
-                        <div className="w-[600px]">
-                            <a href={item.link} className="text-2xl font-bold text-[#D50032] hover:underline block mb-2">
+                        <div className="w-[600px] gap-12 mb-40 ">
+                            <a href={item.link} className="text-3xl font-bold text-[#D50032] hover:underline block mb-6">
                                 {item.title}
                             </a>
-                            <p className="text-sm leading-6 text-left font-montserrat">{item.text}</p>
+                            <p className="text-lg leading-6 text-left font-montserrat">{item.text}</p>
                         </div>
                     </div>
                 ))}
@@ -104,7 +104,7 @@ const HomePage = () => {
 
             {/* F.A.Q Section */}
             <div className="border-t border-[#D50032] pt-6">
-                <h2 className="text-xl font-bold text-[#D50032] mb-4">Faq:</h2>
+                <h2 className="text-3xl font-bold text-[#D50032] mb-4">Faq:</h2>
                 <div className="space-y-4">
                     {faqData.map((faq, index) => (
                         <div key={index} className="border-b py-3">
@@ -112,13 +112,12 @@ const HomePage = () => {
                                 onClick={() => toggleFAQ(index)}
                                 className="flex justify-between items-center w-full text-left transition-all duration-700 ease-in-out"
                             >
-                                <span className="text-lg font-medium">{faq.question}</span>
-                                <span className="text-red-600 text-xl font-bold">
+                                <span className="text-xl font-medium">{faq.question}</span>
+                                <span className="text-red-600 text-2xl font-bold">
                                     {openIndex === index ? "−" : "+"}
                                 </span>
                             </button>
 
-                            {/* Плавное появление */}
                             <div
                                 className={`overflow-hidden transition-all duration-700 ease-in-out transform ${
                                     openIndex === index ? "max-h-40 opacity-100 scale-y-100" : "max-h-0 opacity-0 scale-y-95"
