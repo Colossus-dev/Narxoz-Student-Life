@@ -57,7 +57,6 @@ const Booking = () => {
 
     return (
         <>
-            <Header />
             <div className="max-w-2xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
                 <h1 className="text-2xl font-bold text-gray-800 mb-6">Бронирование общежития</h1>
 

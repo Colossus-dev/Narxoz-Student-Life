@@ -6,7 +6,6 @@ import { Logout, Edit } from "@mui/icons-material";
 const Profile = () => {
     return (
         <>
-            <Header />
 
             {/* Фон страницы */}
             <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center p-10">
