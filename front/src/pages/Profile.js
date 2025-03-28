@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Header from "../components/Header";
 import { Button } from "@mui/material";
 import { Logout, Edit } from "@mui/icons-material";
 
 const Profile = () => {
-    const [user, setUser] = useState(null);
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await axios.get("http://localhost:8000/api/user", {
-                    withCredentials: true,
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        Accept: "application/json",
-                    },
-                });
-                setUser(response.data);
-            } catch (error) {
-                console.error("Ошибка при получении данных пользователя:", error);
-            }
-        };
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
-        fetchUser();
-    }, []);
-
-    if (!user) return <p>Загрузка...</p>;
+    if (!user) return <p className="text-center mt-10 text-lg">Загрузка профиля...</p>;
 
     return (
         <>
@@ -35,13 +23,10 @@ const Profile = () => {
                 <div className="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-10 flex items-start border border-gray-200">
                     <div className="flex flex-col items-center w-1/3 pr-10 border-r border-gray-300">
                         <img
-                            src="/avatar.jpg"
+                            src="/profile_icon.png"
                             alt="User Profile"
                             className="w-40 h-40 rounded-full border-4 border-gray-300 shadow-md object-cover mb-5"
                         />
-                        <Button variant="outlined" startIcon={<Edit />}>
-                            Изменить
-                        </Button>
                     </div>
 
                     <div className="w-2/3 pl-10">
@@ -68,7 +53,12 @@ const Profile = () => {
                         </div>
 
                         <div className="mt-10 flex justify-center">
-                            <Button variant="contained" startIcon={<Logout />} className="!bg-red-600 hover:!bg-red-700">
+                            <Button
+                                variant="contained"
+                                startIcon={<Logout />}
+                                onClick={handleLogout}
+                                className="!bg-red-600 hover:!bg-red-700"
+                            >
                                 Выйти
                             </Button>
                         </div>

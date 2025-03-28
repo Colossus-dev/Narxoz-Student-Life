@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoginPage from "./auth/login";
-import RegisterPage from "./auth/register";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/Profile";
 import BookingPage from "./pages/Booking";
@@ -13,6 +12,7 @@ import Barbershop from "./pages/Barbershop";
 import ShopPage from "./pages/Shop";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
+import PrivateRoute from "./components/PrivateRoute";
 
 const theme = createTheme({
     typography: {
@@ -40,16 +40,71 @@ function App() {
                 {/* Контейнер для контента */}
                 <div className="flex-1">
                     <Routes>
-                        <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<RegisterPage />} />
-                        <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/booking" element={<BookingPage />} />
-                        <Route path="/my-bookings" element={<MyBookingsPage />} />
-                        <Route path="/barbershop" element={<Barbershop />} />
-                        <Route path="/shop" element={<ShopPage />} />
-                        <Route path="/shop/:id" element={<ProductPage addToCart={addToCart} />} />
-                        <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} />} />
+                        <Route
+                            path="/"
+                            element={
+                                <PrivateRoute>
+                                    <HomePage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <PrivateRoute>
+                                    <ProfilePage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/booking"
+                            element={
+                                <PrivateRoute>
+                                    <BookingPage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/my-bookings"
+                            element={
+                                <PrivateRoute>
+                                    <MyBookingsPage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/barbershop"
+                            element={
+                                <PrivateRoute>
+                                    <Barbershop />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/shop"
+                            element={
+                                <PrivateRoute>
+                                    <ShopPage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/shop/:id"
+                            element={
+                                <PrivateRoute>
+                                    <ProductPage addToCart={addToCart} />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/cart"
+                            element={
+                                <PrivateRoute>
+                                    <Cart cart={cart} removeFromCart={removeFromCart} />
+                                </PrivateRoute>
+                            }
+                        />
                     </Routes>
                 </div>
 

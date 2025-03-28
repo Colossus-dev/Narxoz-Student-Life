@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
+    const { user, loading } = useAuth();
     const [openIndex, setOpenIndex] = useState(null);
+
+    if (loading) return <p className="text-center mt-10 text-lg">Загрузка...</p>;
 
     const toggleFAQ = (index) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -30,34 +34,34 @@ const HomePage = () => {
             image: "/dorm1.png",
             title: "Общежития",
             link: "/booking",
-            text: "Все студенты, нуждающиеся в жилье, будут размещены в одном из четырех общежитий. Здания общежитий расположены рядом с учебными корпусами. Вместительность до 1171 студентов. Жилая площадь на одного человека в ДС 2А, 2Б и 3 — 6,6 кв.м, в новом общежитии Narxoz Residence — 11,2 кв.м.",
+            text: "Все студенты, нуждающиеся в жилье, будут размещены...",
         },
         {
             image: "/barber.png",
             title: "Narxoz Barbershop",
             link: "/barbershop",
-            text: "Narxoz Barbershop — это профессиональный барбершоп на территории университета, где студенты могут получить качественные услуги стрижки и ухода за волосами по доступным ценам.",
+            text: "Narxoz Barbershop — это профессиональный барбершоп...",
         },
         {
             image: "/shop.png",
             title: "Narxoz Shop",
             link: "/shop",
-            text: "Narxoz Shop предлагает широкий ассортимент товаров с фирменной символикой университета, включая одежду, аксессуары и канцелярию.",
+            text: "Narxoz Shop предлагает широкий ассортимент товаров...",
         },
     ];
 
     const faqData = [
         {
             question: "Университетке түсу үшін қандай талаптар бар?",
-            answer: "Университетке түсу үшін талаптар қатарына ҰБТ нәтижелері, мотивациялық хат және басқа да қажетті құжаттар жатады.",
+            answer: "Университетке түсу үшін талаптар қатарына ҰБТ нәтижелері...",
         },
         {
             question: "Университет шетелдік студенттерге қандай қолдау көрсетеді?",
-            answer: "Шетелдік студенттер үшін арнайы поддержка қызметтері, тілдік курстар және визалық көмек ұсынылады.",
+            answer: "Шетелдік студенттер үшін арнайы поддержка қызметтері...",
         },
         {
             question: "Barbershop-қа төлем қалай жүзеге асады?",
-            answer: "Біздің сайтта бронь жасап, сол уақытта шаштаразға барып, төлемді қолма-қол жасайсыз.",
+            answer: "Сайтта бронь жасап, қолма-қол төлем жасайсыз.",
         },
         {
             question: "Киім сәйкес келмесе, ауыстыру немесе қайтаруға бола ма?",
@@ -68,7 +72,7 @@ const HomePage = () => {
     return (
         <div className="max-w-[1200px] mx-auto px-4 py-6">
             <h1 className="text-2xl font-bold text-[#D50032] mb-6 font-montserrat">
-                Добро пожаловать, Assylkhan
+                Добро пожаловать, {user?.name}
             </h1>
 
             {/* Слайдер */}
