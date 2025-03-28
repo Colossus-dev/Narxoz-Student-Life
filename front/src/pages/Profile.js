@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import Header from "../components/Header";
 import { Button } from "@mui/material";
 import { Logout, Edit } from "@mui/icons-material";
+import PageWrapper from "../components/PageWrapper";
 
 const Profile = () => {
     const { user, logout } = useAuth();
@@ -18,6 +19,7 @@ const Profile = () => {
 
     return (
         <>
+        <PageWrapper>
             {/* Фон страницы */}
             <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center p-10">
                 <div className="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-10 flex items-start border border-gray-200">
@@ -65,6 +67,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+        </PageWrapper>
         </>
     );
 };

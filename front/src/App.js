@@ -13,14 +13,19 @@ import ShopPage from "./pages/Shop";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
 import PrivateRoute from "./components/PrivateRoute";
+import { useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
 
 const theme = createTheme({
     typography: {
         fontFamily: "'Montserrat', Arial, sans-serif",
     },
 });
-
 function App() {
+    const location = useLocation(); // 👈 определяем текущий путь
+    const isAuthPage = location.pathname === "/login";
+
     const [cart, setCart] = useState([]);
 
     const addToCart = (product) => {
@@ -35,11 +40,22 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <div className="flex flex-col min-h-screen">
-                <Header />
+                <AnimatePresence>
+                    {!isAuthPage && (
+                        <motion.div
+                            key="header"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <Header />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-                {/* Контейнер для контента */}
                 <div className="flex-1">
-                    <Routes>
+                    <Routes location={location} key={location.pathname}>
                         <Route path="/login" element={<LoginPage />} />
                         <Route
                             path="/"
@@ -108,12 +124,24 @@ function App() {
                     </Routes>
                 </div>
 
-                {/* Футер всегда внизу */}
-                <Footer />
+                <AnimatePresence>
+                    {!isAuthPage && (
+                        <motion.div
+                            key="footer"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <Footer />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </ThemeProvider>
     );
 }
+
 
 function AppWithRouter() {
     return (

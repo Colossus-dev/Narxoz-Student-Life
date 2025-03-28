@@ -6,19 +6,17 @@ use App\Filament\Resources\BookingRequestResource\Pages;
 use App\Models\BookingRequest;
 use App\Models\Room;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ViewField;
+use App\Services\BookingService;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ViewField;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 
@@ -41,7 +39,7 @@ class BookingRequestResource extends Resource
                 Select::make('room_id')
                     ->label('Комната')
                     ->options(function () {
-                        return \App\Models\Room::where('reserve_status', false)
+                        return Room::where('reserve_status', false)
                             ->pluck('room_number', 'id');
                     })
                     ->searchable()
@@ -95,7 +93,6 @@ class BookingRequestResource extends Resource
                     ->label('Kaspi QR-код')
                     ->view('admin.partials.kaspi_qr'),
             ]);
-
     }
 
     public static function table(Table $table): Table
@@ -116,15 +113,14 @@ class BookingRequestResource extends Resource
                     ->html(),
                 TextColumn::make('created_at')->label('Создано')->dateTime()->sortable(),
             ])
-
             ->filters([])
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                \Filament\Tables\Actions\BulkActionGroup::make([
+                    \Filament\Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -142,4 +138,6 @@ class BookingRequestResource extends Resource
             'edit' => Pages\EditBookingRequest::route('/{record}/edit'),
         ];
     }
+
+    // 💡 Добавлено для интеграции BookingService
 }

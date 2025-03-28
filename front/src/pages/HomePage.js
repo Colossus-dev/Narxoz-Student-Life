@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useAuth } from "../context/AuthContext";
+import PageWrapper from "../components/PageWrapper";
+import FadeInOnScroll from "../components/FadeInOnScroll";
 
 const HomePage = () => {
     const { user, loading } = useAuth();
@@ -34,21 +36,22 @@ const HomePage = () => {
             image: "/dorm1.png",
             title: "Общежития",
             link: "/booking",
-            text: "Все студенты, нуждающиеся в жилье, будут размещены...",
+            text: "В Нархоз Университете предоставляются комфортные общежития с современными условиями проживания. Каждый студент, нуждающийся в жилье, может подать заявку на бронирование. Все корпуса расположены рядом с учебными зданиями, а комнаты обустроены всем необходимым для учебы и отдыха.",
         },
         {
             image: "/barber.png",
             title: "Narxoz Barbershop",
             link: "/barbershop",
-            text: "Narxoz Barbershop — это профессиональный барбершоп...",
+            text: "Narxoz Barbershop — это стильное и уютное место на территории университета, где студенты могут получить профессиональные услуги по стрижке и уходу за волосами. Быстро, удобно и по доступной цене — всё, что нужно, не выходя из кампуса.",
         },
         {
             image: "/shop.png",
             title: "Narxoz Shop",
             link: "/shop",
-            text: "Narxoz Shop предлагает широкий ассортимент товаров...",
+            text: "Narxoz Shop — официальный магазин с брендированной продукцией университета. Здесь вы найдете одежду, аксессуары, канцелярские товары и сувениры с символикой Нархоза. Отличный способ подчеркнуть свою причастность к университетской жизни!",
         },
     ];
+
 
     const faqData = [
         {
@@ -70,116 +73,134 @@ const HomePage = () => {
     ];
 
     return (
-        <div className="max-w-[1200px] mx-auto px-4 py-6">
-            <h1 className="text-2xl font-bold text-[#D50032] mb-6 font-montserrat">
+        <PageWrapper>
+            <h1 className="text-3xl font-bold text-[#D50032] mb-10 font-montserrat">
                 Добро пожаловать, {user?.name}
             </h1>
 
             {/* Слайдер */}
-            <div className="w-full mb-16">
-                <Slider {...settings}>
-                    {slideImages.map((src, index) => (
-                        <div key={index} className="w-full h-[550px] flex items-center justify-center">
-                            <img src={src} alt={`Слайд ${index + 1}`} className="w-full h-full object-cover" />
-                        </div>
-                    ))}
-                </Slider>
-            </div>
+            <FadeInOnScroll>
+                <div className="w-full mb-16 rounded-2xl overflow-hidden shadow-xl">
+                    <Slider {...settings}>
+                        {slideImages.map((src, index) => (
+                            <div key={index} className="w-full h-[500px]">
+                                <img src={src} alt={`Слайд ${index + 1}`} className="w-full h-full object-cover" />
+                            </div>
+                        ))}
+                    </Slider>
+                </div>
+            </FadeInOnScroll>
 
             {/* Контент блоки */}
-            <div className="flex flex-col gap-12 mb-20">
+            <div className="flex flex-col gap-20 mb-20">
                 {contentData.map((item, index) => (
-                    <div key={index} className={`flex ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"} items-center gap-20`}>
-                        <img src={item.image} alt={`Изображение ${index + 1}`} className="w-[500px] h-[350px] object-cover flex-shrink-0" />
-                        <div className="w-[600px] gap-12 mb-40">
-                            <a href={item.link} className="text-3xl font-bold text-[#D50032] hover:underline block mb-6">
-                                {item.title}
-                            </a>
-                            <p className="text-lg leading-6 text-left font-montserrat">{item.text}</p>
+                    <FadeInOnScroll key={index} delay={index * 0.1}>
+                        <div className={`flex ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"} items-center gap-10`}>
+                            <img
+                                src={item.image}
+                                alt={item.title}
+                                className="w-[460px] h-[300px] object-cover rounded-2xl shadow-md transition duration-300 hover:shadow-xl"
+                            />
+                            <div className="w-full max-w-[600px]">
+                                <a
+                                    href={item.link}
+                                    className="text-3xl font-bold text-[#D50032] hover:underline transition-all duration-300"
+                                >
+                                    {item.title}
+                                </a>
+                                <p className="mt-4 text-lg leading-7 text-gray-700">{item.text}</p>
+                            </div>
                         </div>
-                    </div>
+                    </FadeInOnScroll>
                 ))}
             </div>
 
-            {/* F.A.Q Section */}
-            <div className="border-t border-[#D50032] pt-6 mb-16">
-                <h2 className="text-3xl font-bold text-[#D50032] mb-4">Faq:</h2>
-                <div className="space-y-4">
-                    {faqData.map((faq, index) => (
-                        <div key={index} className="border-b py-3">
-                            <button
-                                onClick={() => toggleFAQ(index)}
-                                className="flex justify-between items-center w-full text-left transition-all duration-700 ease-in-out"
-                            >
-                                <span className="text-xl font-medium">{faq.question}</span>
-                                <span className="text-red-600 text-2xl font-bold">{openIndex === index ? "−" : "+"}</span>
-                            </button>
-
-                            <div
-                                className={`overflow-hidden transition-all duration-700 ease-in-out transform ${
-                                    openIndex === index ? "max-h-40 opacity-100 scale-y-100" : "max-h-0 opacity-0 scale-y-95"
-                                }`}
-                            >
-                                <p className="mt-2 text-gray-700">{faq.answer}</p>
+            {/* FAQ */}
+            <FadeInOnScroll>
+                <div className="border-t border-[#D50032] pt-10 mb-16">
+                    <h2 className="text-3xl font-bold text-[#D50032] mb-6">Часто задаваемые вопросы</h2>
+                    <div className="space-y-4">
+                        {faqData.map((faq, index) => (
+                            <div key={index} className="border-b py-3">
+                                <button
+                                    onClick={() => toggleFAQ(index)}
+                                    className="flex justify-between items-center w-full text-left"
+                                >
+                                    <span className="text-xl font-medium">{faq.question}</span>
+                                    <span className="text-red-600 text-2xl font-bold">
+                                        {openIndex === index ? "−" : "+"}
+                                    </span>
+                                </button>
+                                <div
+                                    className={`overflow-hidden transition-all duration-700 ease-in-out transform ${
+                                        openIndex === index
+                                            ? "max-h-40 opacity-100 scale-y-100"
+                                            : "max-h-0 opacity-0 scale-y-95"
+                                    }`}
+                                >
+                                    <p className="mt-2 text-gray-700">{faq.answer}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Карта и форма */}
-            <div className="mt-20 flex flex-col md:flex-row gap-12 border-t border-gray-300 pt-10">
-                {/* Карта */}
-                <div className="w-full md:w-1/2">
-                    <h2 className="text-2xl font-bold mb-4">Мы располагаемся здесь</h2>
-                    <div className="rounded-lg overflow-hidden shadow-lg">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2907.7627357037104!2d76.86870497563284!3d43.214465580697095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3883685804a93795%3A0x38849e5598fa1531!2z0J3QsNGA0YXQvtC3!5e0!3m2!1sru!2skz!4v1742840062762!5m2!1sru!2skz"
-                            width="100%"
-                            height="350"
-                            style={{ border: 0 }}
-                            allowFullScreen=""
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                        ></iframe>
+                        ))}
                     </div>
                 </div>
+            </FadeInOnScroll>
 
-                {/* Форма */}
-                <div className="w-full md:w-1/2">
-                    <h2 className="text-2xl font-bold mb-4">Имеются интересующие вопросы?</h2>
-                    <form className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Имя</label>
-                            <input type="text" required className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            {/* Карта + форма */}
+            <FadeInOnScroll>
+                <div className="mt-20 flex flex-col md:flex-row gap-12 border-t border-gray-300 pt-10">
+                    {/* Карта */}
+                    <div className="w-full md:w-1/2">
+                        <h2 className="text-2xl font-bold mb-4">Мы располагаемся здесь</h2>
+                        <div className="rounded-2xl overflow-hidden shadow-lg">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2907.7627357037104!2d76.86870497563284!3d43.214465580697095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3883685804a93795%3A0x38849e5598fa1531!2z0J3QsNGA0YXQvtC3!5e0!3m2!1sru!2skz!4v1742840062762!5m2!1sru!2skz"
+                                width="100%"
+                                height="350"
+                                style={{ border: 0 }}
+                                allowFullScreen=""
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Фамилия</label>
-                            <input type="text" required className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Телефон</label>
-                            <input
-                                type="tel"
-                                required
-                                placeholder="+7 (XXX) XXX XXXX"
-                                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Повод</label>
-                            <textarea className="mt-1 block w-full border border-gray-300 rounded-md p-2" rows="3"></textarea>
-                        </div>
-                        <button
-                            type="submit"
-                            className="bg-[#D50032] text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-                        >
-                            Отправить
-                        </button>
-                    </form>
+                    </div>
+
+                    {/* Форма */}
+                    <div className="w-full md:w-1/2">
+                        <h2 className="text-2xl font-bold mb-4">Имеются интересующие вопросы?</h2>
+                        <form className="space-y-4">
+                            {["Имя", "Фамилия", "Телефон", "Повод"].map((label, idx) =>
+                                label === "Повод" ? (
+                                    <div key={idx}>
+                                        <label className="block text-sm font-medium text-gray-700">{label}</label>
+                                        <textarea
+                                            rows="3"
+                                            className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                        ></textarea>
+                                    </div>
+                                ) : (
+                                    <div key={idx}>
+                                        <label className="block text-sm font-medium text-gray-700">{label}</label>
+                                        <input
+                                            type={label === "Телефон" ? "tel" : "text"}
+                                            placeholder={label === "Телефон" ? "+7 (XXX) XXX XXXX" : ""}
+                                            className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                            required
+                                        />
+                                    </div>
+                                )
+                            )}
+                            <button
+                                type="submit"
+                                className="bg-[#D50032] text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all"
+                            >
+                                Отправить
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </FadeInOnScroll>
+        </PageWrapper>
     );
 };
 

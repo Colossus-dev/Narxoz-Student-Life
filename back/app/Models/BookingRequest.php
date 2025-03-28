@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mail\BookingApprovedMail;
+use App\Services\BookingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -90,28 +91,16 @@ class BookingRequest extends Model
     protected static function boot()
     {
         parent::boot();
+
         static::creating(function ($bookingRequest) {
-            $room = Room::find($bookingRequest->room_id);
-            $currentBookings = $room->bookingRequests()->count();
-
-            if ($currentBookings >= $room->capacity) {
-                // Если студент льготник, отправляем в резервную комнату
-                if (!empty($bookingRequest->privileges)) {
-                    $reservedRoom = self::assignReservedRoom($bookingRequest);
-                    Log::info("Студент #{$bookingRequest->user_id} автоматически распределён в резервную комнату #{$reservedRoom->id}");
-                } else {
-                    throw new \Exception("Бронирование на комнату #{$room->room_number} закрыто.");
-                }
-            }
+            app(BookingService::class)->validateRoomAvailability($bookingRequest);
         });
-
 
         static::updated(function ($bookingRequest) {
             if ($bookingRequest->isDirty('status') && $bookingRequest->status === 'approved') {
-                Mail::to($bookingRequest->user->email)
-                    ->queue(new BookingApprovedMail($bookingRequest));
-                $bookingRequest->generateKaspiQr();
+                app(BookingService::class)->handleApproved($bookingRequest);
             }
         });
     }
+
 }
