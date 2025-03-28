@@ -5,9 +5,11 @@ use App\Filament\Resources\RoomResource\Pages;
 use App\Models\Room;
 use App\Models\Dormitory;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -19,7 +21,7 @@ class RoomResource extends Resource
 {
     protected static ?string $model = Room::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Dormitory Management';
+    protected static ?string $navigationGroup = 'Управление общежитиями';
 
 
     public static function form(Form $form): Form
@@ -53,6 +55,11 @@ class RoomResource extends Resource
                     ->minValue(0)
                     ->step(0.01)
                     ->required(),
+                Forms\Components\Toggle::make('reserve_status')
+                    ->label('Резервная Комната для Льготников')
+                    ->helperText('Отметьте, если эта комната предназначена только для льготных студентов')
+                    ->default(false),
+
             ]);
     }
 
@@ -67,7 +74,8 @@ class RoomResource extends Resource
                 TextColumn::make('capacity')->label('Capacity')->sortable(),
                 TextColumn::make('occupied')->label('Occupied')->sortable(),
                 TextColumn::make('price')->label('Price')->sortable(),
-
+                Tables\Columns\BooleanColumn::make('reserve_status')
+                    ->label('Reserve Room'),
                 TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
             ])
             ->filters([])

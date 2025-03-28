@@ -18,14 +18,14 @@ class DormitoryResource extends Resource
 {
     protected static ?string $model = Dormitory::class;
     protected static ?string $navigationIcon = 'heroicon-o-home';
-    protected static ?string $navigationGroup = 'Dormitory Management';
+    protected static ?string $navigationGroup = 'Управление общежитиями'; // ← перевод
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Dormitory Name')
+                    ->label('Название общежития') // ← перевод
                     ->required()
                     ->maxLength(255),
             ]);
@@ -36,17 +36,17 @@ class DormitoryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable(),
-                TextColumn::make('name')->label('Dormitory Name')->sortable()->searchable(),
-                TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
+                TextColumn::make('name')->label('Название общежития')->sortable()->searchable(), // ← перевод
+                TextColumn::make('created_at')->label('Дата создания')->dateTime()->sortable(), // ← перевод
             ])
             ->filters([])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->label('Редактировать'), // можно добавить переводы экшенов
+                DeleteAction::make()->label('Удалить'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }

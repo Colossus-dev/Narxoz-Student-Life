@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Filament\Resources;
-
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\Role;
@@ -18,26 +16,25 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-user';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = 'Управление Пользователями';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Full Name')
+                    ->label('ФИО')
                     ->required()
                     ->maxLength(255),
 
                 TextInput::make('login')
-                    ->label('Login')
+                    ->label('Логин')
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
@@ -49,42 +46,59 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true),
 
                 TextInput::make('password')
-                    ->label('Password')
+                    ->label('Пароль')
                     ->password()
                     ->maxLength(255)
                     ->required(fn ($context) => $context === 'create')
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
 
                 Select::make('gender')
-                    ->label('Gender')
+                    ->label('Пол')
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
+                        'male' => 'Мужской',
+                        'female' => 'Женский',
                     ])
                     ->required(),
 
                 TextInput::make('gpa')
-                    ->label('GPA')
+                    ->label('Средний балл (GPA)')
                     ->numeric()
                     ->minValue(0)
                     ->maxValue(4)
                     ->step(0.01)
                     ->nullable(),
 
+                TextInput::make('phone')
+                    ->label('Телефон')
+                    ->tel(),
+
+                Select::make('faculty')
+                    ->label('Факультет')
+                    ->options([
+                        'Digital Engineering' => 'Цифровая инженерия',
+                        'Digital Management and Design' => 'Цифровой менеджмент и дизайн',
+                        'Право' => 'Право',
+                        'Менеджмент' => 'Менеджмент',
+                        'Кибербезопасность' => 'Кибербезопасность',
+                        'Экономика' => 'Экономика',
+                        'Математика и Статистика' => 'Математика и Статистика',
+                    ])
+                    ->required(),
+
                 DatePicker::make('birthday')
-                    ->label('Birthday')
+                    ->label('Дата рождения')
                     ->required(),
 
                 DatePicker::make('admission')
-                    ->label('Admission Date')
+                    ->label('Дата поступления')
                     ->required(),
 
                 DatePicker::make('completion')
-                    ->label('Completion Date')
+                    ->label('Дата окончания')
                     ->required(),
 
                 Select::make('role_id')
-                    ->label('Role')
+                    ->label('Роль')
                     ->options(Role::pluck('name', 'id'))
                     ->searchable()
                     ->required(),
@@ -96,25 +110,27 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable(),
-                TextColumn::make('name')->searchable()->label('Full Name'),
-                TextColumn::make('login')->searchable()->label('Login'),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('gender')->label('Gender')->sortable(),
+                TextColumn::make('name')->searchable()->label('ФИО'),
+                TextColumn::make('login')->searchable()->label('Логин'),
+                TextColumn::make('email')->searchable()->label('Email'),
+                TextColumn::make('gender')->label('Пол')->sortable(),
                 TextColumn::make('gpa')->label('GPA')->sortable(),
-                TextColumn::make('birthday')->label('Birthday')->date()->sortable(),
-                TextColumn::make('admission')->label('Admission Date')->date()->sortable(),
-                TextColumn::make('completion')->label('Completion Date')->date()->sortable(),
-                TextColumn::make('role.name')->label('Role')->sortable(),
-                TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
+                TextColumn::make('birthday')->label('Дата рождения')->date()->sortable(),
+                TextColumn::make('phone')->label('Телефон'),
+                TextColumn::make('faculty')->label('Факультет')->sortable(),
+                TextColumn::make('admission')->label('Дата поступления')->date()->sortable(),
+                TextColumn::make('completion')->label('Дата окончания')->date()->sortable(),
+                TextColumn::make('role.name')->label('Роль')->sortable(),
+                TextColumn::make('created_at')->label('Создано')->dateTime()->sortable(),
             ])
             ->filters([])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->label('Редактировать'),
+                DeleteAction::make()->label('Удалить'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Удалить выбранное'),
                 ]),
             ]);
     }

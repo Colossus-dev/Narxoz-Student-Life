@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container,
+} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { useNavigate } from 'react-router-dom';
+
 
 const theme = createTheme({
     typography: {
@@ -22,8 +27,8 @@ function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
+            <Link color="inherit" href="#">
+                Narxoz Student Life
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -32,9 +37,48 @@ function Copyright() {
 }
 
 export default function SignIn() {
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError(null);
+
+        try {
+            // Шаг 1: Получаем CSRF cookie
+            await axios.get('http://localhost:8000/sanctum/csrf-cookie', {
+                withCredentials: true,
+            });
+
+            // Шаг 2: Отправляем логин
+            const response = await axios.post(
+                'http://localhost:8000/api/login',
+                {
+                    login,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                }
+            );
+
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+
+            navigate('/');
+            // window.location.href = '/dashboard'; // опционально
+        } catch (err) {
+            setError('Неверный логин или пароль');
+        }
+    };
+
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs" sx={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
                     sx={{
@@ -44,51 +88,69 @@ export default function SignIn() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, width: 64, height: 64 }} src="/favicon.ico" alt="Logo" />
+                    <Avatar
+                        sx={{ m: 1, width: 64, height: 64 }}
+                        src="/favicon.ico"
+                        alt="Logo"
+                    />
                     <Typography component="h1" variant="h5">
-                        Narxoz
+                        Narxoz Student Life
                     </Typography>
                     <Box
+                        component="form"
+                        onSubmit={handleSubmit}
                         sx={{
                             mt: 3,
                             p: 3,
                             boxShadow: 3,
                             borderRadius: 4,
-                            bgcolor: 'background.paper'
+                            bgcolor: 'background.paper',
                         }}
                     >
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="login"
+                            label="Логин"
+                            name="login"
+                            autoComplete="username"
                             autoFocus
-                            sx={{ mb: 2 }}
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
                         />
                         <TextField
                             margin="normal"
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Пароль"
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        borderWidth: '0.5px',
-                                    },
-                                },
-                            }}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
-                        <Box display="flex" alignItems="center" justifyContent="space-between" mb={-1}>
+                        {error && (
+                            <Typography
+                                variant="body2"
+                                color="error"
+                                sx={{ mt: 1 }}
+                            >
+                                {error}
+                            </Typography>
+                        )}
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            mb={1}
+                        >
                             <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
+                                control={
+                                    <Checkbox value="remember" color="primary" />
+                                }
+                                label="Запомнить меня"
                             />
                         </Box>
                         <Button
@@ -98,29 +160,38 @@ export default function SignIn() {
                             sx={{
                                 mt: 2,
                                 mb: 2,
-                                bgcolor: '#D50032', '&:hover': { bgcolor: 'darkred' },
+                                bgcolor: '#D50032',
+                                '&:hover': { bgcolor: 'darkred' },
                                 fontFamily: 'Gotham Medium, Arial, sans-serif',
-                                borderRadius: 1
+                                borderRadius: 1,
                             }}
                         >
-                            Sign In
+                            Войти
                         </Button>
-                        <Grid container justifyContent="space-between" alignItems="center">
+                        <Grid
+                            container
+                            justifyContent="space-between"
+                            alignItems="center"
+                        >
                             <Grid item>
                                 <Link href="#" variant="body2">
-                                    Forgot password?
+                                    Забыли пароль?
                                 </Link>
                             </Grid>
                             <Grid item display="flex" alignItems="center" gap={1}>
-                                <Typography variant="body2">Don't have an account?</Typography>
+                                <Typography variant="body2">
+                                    Нет аккаунта?
+                                </Typography>
                                 <Link href="#" variant="body2">
-                                    Sign Up
+                                    Зарегистрироваться
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
-                <Box mt={8}></Box>
+                <Box mt={8}>
+                    <Copyright />
+                </Box>
             </Container>
         </ThemeProvider>
     );

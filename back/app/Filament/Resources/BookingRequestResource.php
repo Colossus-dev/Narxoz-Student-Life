@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BookingRequestResource\Pages;
@@ -25,77 +26,76 @@ class BookingRequestResource extends Resource
 {
     protected static ?string $model = BookingRequest::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationGroup = 'Dormitory Management';
+    protected static ?string $navigationGroup = 'Управление общежитиями';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('user_id')
-                    ->label('Student')
+                    ->label('Студент')
                     ->options(User::pluck('name', 'id'))
                     ->searchable()
                     ->required(),
 
                 Select::make('room_id')
-                    ->label('Room')
-                    ->options(Room::pluck('room_number', 'id'))
+                    ->label('Комната')
+                    ->options(function () {
+                        return \App\Models\Room::where('reserve_status', false)
+                            ->pluck('room_number', 'id');
+                    })
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->helperText('Выберите только из обычных (не резервных) комнат'),
 
                 TextInput::make('city')
-                    ->label('City of Residence')
+                    ->label('Город проживания')
                     ->required()
                     ->maxLength(255),
 
                 Select::make('privileges')
-                    ->label('Privileges')
+                    ->label('Льготы')
                     ->options([
-                        'large_family' => 'Large Family',
-                        'orphan' => 'Orphan',
-                        'disabled' => 'Disabled',
+                        'large_family' => 'Многодетная семья',
+                        'orphan' => 'Сирота',
+                        'disabled' => 'Инвалидность',
                     ])
                     ->nullable(),
 
                 FileUpload::make('attached_files')
-                    ->label('Attached Files')
+                    ->label('Прикреплённые файлы')
                     ->multiple()
                     ->nullable(),
 
                 Select::make('status')
-                    ->label('Status')
+                    ->label('Статус заявки')
                     ->options([
-                        'pending' => 'Pending',
-                        'approved' => 'Approved',
-                        'rejected' => 'Rejected',
+                        'pending' => 'В ожидании',
+                        'approved' => 'Одобрено',
+                        'rejected' => 'Отклонено',
                     ])
                     ->default('pending')
                     ->required(),
+
                 Select::make('payment_status')
-                    ->label('Payment Status')
+                    ->label('Статус оплаты')
                     ->options([
-                        'pending' => 'Pending',
-                        'paid' => 'Paid',
-                        'failed' => 'Failed',
+                        'pending' => 'Ожидается',
+                        'paid' => 'Оплачено',
+                        'failed' => 'Ошибка оплаты',
                     ])
                     ->default('pending')
                     ->required(),
 
                 Toggle::make('contract_signed')
-                    ->label('Contract Signed')
+                    ->label('Договор подписан')
                     ->default(false),
 
                 ViewField::make('payment_qr')
-                    ->label('Kaspi QR Code')
+                    ->label('Kaspi QR-код')
                     ->view('admin.partials.kaspi_qr'),
-
-//                Textarea::make('contract_data')
-//                    ->label('Contract Data')
-//                    ->helperText('Enter the details of the contract.')
-//                    ->rows(5)
-//                    ->columnSpanFull()
-//                    ->visible(fn ($record) => $record->payment_status === 'paid')
             ]);
+
     }
 
     public static function table(Table $table): Table
@@ -103,20 +103,20 @@ class BookingRequestResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable(),
-                TextColumn::make('user.name')->label('Student')->sortable()->searchable(),
-                TextColumn::make('room.room_number')->label('Room Number')->sortable(),
-                TextColumn::make('city')->label('City')->sortable(),
-                TextColumn::make('privileges')->label('Privileges')->sortable(),
-                TextColumn::make('status')->label('Status')->sortable(),
-                TextColumn::make('payment_status')->label('Payment Status')->sortable(),
-                BooleanColumn::make('contract_signed')->label('Contract Signed'),
+                TextColumn::make('user.name')->label('Студент')->sortable()->searchable(),
+                TextColumn::make('room.room_number')->label('Номер комнаты')->sortable(),
+                TextColumn::make('city')->label('Город')->sortable(),
+                TextColumn::make('privileges')->label('Льготы')->sortable(),
+                TextColumn::make('status')->label('Статус')->sortable(),
+                TextColumn::make('payment_status')->label('Статус оплаты')->sortable(),
+                BooleanColumn::make('contract_signed')->label('Договор подписан'),
                 TextColumn::make('payment_qr_url')
                     ->label('Kaspi QR')
                     ->formatStateUsing(fn($state) => $state ? '<a href="'.$state.'" target="_blank">Оплатить</a>' : 'Не сгенерировано')
                     ->html(),
-
-                TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
+                TextColumn::make('created_at')->label('Создано')->dateTime()->sortable(),
             ])
+
             ->filters([])
             ->actions([
                 EditAction::make(),

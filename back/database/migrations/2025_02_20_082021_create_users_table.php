@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('birthday');
             $table->date('admission');
             $table->date('completion');
+            $table->string('faculty');
+            $table->string('phone');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

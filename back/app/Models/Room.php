@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     use HasFactory;
-    protected $fillable = ['dormitory_id', 'floor', 'room_number', 'capacity', 'occupied','price'];
+    protected $fillable = ['dormitory_id', 'floor', 'room_number', 'capacity', 'occupied','reserve_status','price'];
 
     public function dormitory()
     {

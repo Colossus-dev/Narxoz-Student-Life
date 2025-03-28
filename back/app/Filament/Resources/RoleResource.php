@@ -11,22 +11,20 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
 
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'User Management';
-
+    protected static ?string $navigationGroup = 'Управление Пользователями';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Role Name')
+                    ->label('Название роли')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -40,36 +38,32 @@ class RoleResource extends Resource
                     ->label('ID')
                     ->sortable(),
                 TextColumn::make('name')
-                    ->label('Role Name')
+                    ->label('Название роли')
                     ->searchable(),
                 TextColumn::make('users_count')
-                    ->label('Users Count')
+                    ->label('Количество пользователей')
                     ->sortable()
                     ->counts('users'),
                 TextColumn::make('created_at')
-                    ->label('Created At')
+                    ->label('Дата создания')
                     ->dateTime()
                     ->sortable(),
             ])
-            ->filters([
-                // Add any necessary filters here
-            ])
+            ->filters([]) // Фильтры можно добавить позже
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->label('Редактировать'),
+                Tables\Actions\DeleteAction::make()->label('Удалить'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            // Define relationships if needed
-        ];
+        return [];
     }
 
     public static function getPages(): array

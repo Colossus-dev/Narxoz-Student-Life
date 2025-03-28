@@ -27,6 +27,26 @@ class BookingRequest extends Model
         return $this->belongsTo(Room::class);
     }
 
+    public static function assignReservedRoom($bookingRequest)
+    {
+        $reservedRooms = Room::where('reserve_status', true)->get();
+
+        if ($reservedRooms->isEmpty()) {
+            throw new \Exception("Нет доступных резервных комнат!");
+        }
+
+        // Выбираем случайную резервную комнату
+        $randomRoom = $reservedRooms->random();
+
+        // Назначаем студенту эту комнату
+        $bookingRequest->updateQuietly(['room_id' => $randomRoom->id]);
+
+        return $randomRoom;
+    }
+
+
+
+
     public function generateKaspiQr()
     {
         if (!$this->payment_qr_url) { // Проверяем, есть ли уже QR-код
@@ -72,16 +92,24 @@ class BookingRequest extends Model
         parent::boot();
         static::creating(function ($bookingRequest) {
             $room = Room::find($bookingRequest->room_id);
-            if ($room->bookingRequests()->count() >= 10) {
-                throw new \Exception('This room has reached the maximum number of 10 bookings.');
+            $currentBookings = $room->bookingRequests()->count();
+
+            if ($currentBookings >= $room->capacity) {
+                // Если студент льготник, отправляем в резервную комнату
+                if (!empty($bookingRequest->privileges)) {
+                    $reservedRoom = self::assignReservedRoom($bookingRequest);
+                    Log::info("Студент #{$bookingRequest->user_id} автоматически распределён в резервную комнату #{$reservedRoom->id}");
+                } else {
+                    throw new \Exception("Бронирование на комнату #{$room->room_number} закрыто.");
+                }
             }
         });
+
+
         static::updated(function ($bookingRequest) {
             if ($bookingRequest->isDirty('status') && $bookingRequest->status === 'approved') {
                 Mail::to($bookingRequest->user->email)
                     ->queue(new BookingApprovedMail($bookingRequest));
-
-
                 $bookingRequest->generateKaspiQr();
             }
         });
