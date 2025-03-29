@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { FaFileUpload, FaTimes } from "react-icons/fa";
+import {toast} from "react-toastify";
 
 const BookingForm = ({ dormitory, room }) => {
     const { user } = useContext(AuthContext);
@@ -57,10 +58,16 @@ const BookingForm = ({ dormitory, room }) => {
             });
 
             setSuccess("🎉 Заявка успешно отправлена!");
+            toast.success("🎉 Заявка успешно отправлена!");
             setFormData({ city: "", privileges: "", file: null });
         } catch (err) {
             console.error(err);
-            setError("❌ Ошибка при отправке заявки.");
+            if (err.response && err.response.status === 409) {
+                toast.error("Вы уже подавали заявку на общежитие!!!");
+            } else {
+                toast.error("❌ Ошибка при отправке заявки. Попробуйте позже.");
+            }
+            setError("Ошибка при отправке.");
         } finally {
             setLoading(false);
         }

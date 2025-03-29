@@ -15,8 +15,17 @@ class BookingRequestController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'city' => 'required|string',
             'privileges' => 'nullable|string',
-            'attached_files' => 'nullable|file|max:5120|mimes:pdf,jpg,jpeg,png',
+            'attached_file' => 'nullable|file|max:5120|mimes:pdf,jpg,jpeg,png',
         ]);
+
+        // 🔐 Проверка: есть ли уже заявка от пользователя
+        $alreadyExists = BookingRequest::where('user_id', $validated['user_id'])->exists();
+
+        if ($alreadyExists) {
+            return response()->json([
+                'message' => 'Вы уже подали заявку на общежитие. Повторная подача невозможна.',
+            ], 409); // HTTP 409 Conflict
+        }
 
         $filePath = null;
 
@@ -37,6 +46,7 @@ class BookingRequestController extends Controller
 
         return response()->json($booking, 201);
     }
+
 
     // POST /api/bookings/{id}/pay
     public function markAsPaid($id) {

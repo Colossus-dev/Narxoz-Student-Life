@@ -74,15 +74,15 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.05 }}
-                            onClick={() => room.occupied && onSelectRoom(room)}
+                            onClick={() => !room.occupied && onSelectRoom(room)}
                             className={`cursor-pointer p-6 rounded-2xl border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1
-        ${room.occupied ? "bg-white hover:border-[#D50032]" : "bg-gray-100 opacity-60 pointer-events-none"}`}
+                                ${!room.occupied ? "bg-white hover:border-[#D50032]" : "bg-gray-100 opacity-60 pointer-events-none"}`}
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="text-xl font-extrabold text-gray-800">
                                     Комната {room.room_number}
                                 </h3>
-                                {room.occupied ? (
+                                {!room.occupied ? (
                                     <FaBed className="text-green-500 text-lg" title="Доступна" />
                                 ) : (
                                     <FaLock className="text-gray-400 text-lg" title="Занята" />
@@ -108,13 +108,11 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
                             {/* 🟢 Статус */}
                             <div
                                 className={`inline-block px-3 py-1 text-xs font-semibold rounded-full
-            ${room.occupied ? "bg-green-100 text-green-700" : "bg-gray-300 text-gray-700"}`}
+                                    ${!room.occupied ? "bg-green-100 text-green-700" : "bg-gray-300 text-gray-700"}`}
                             >
-                                {room.occupied ? "Доступна" : "Занята"}
+                                {!room.occupied ? "Доступна" : "Занята"}
                             </div>
                         </motion.div>
-
-
                     ))}
                 </div>
             </div>

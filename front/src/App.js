@@ -12,6 +12,8 @@ import Barbershop from "./pages/Barbershop";
 import ShopPage from "./pages/Shop";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
+import { ToastContainer } from 'react-toastify';
+
 import PrivateRoute from "./components/PrivateRoute";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -147,7 +149,10 @@ function App() {
                     )}
                 </AnimatePresence>
             </div>
+            <ToastContainer position="top-center" />
+
         </ThemeProvider>
+
     );
 }
 

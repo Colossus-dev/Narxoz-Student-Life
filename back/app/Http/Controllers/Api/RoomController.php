@@ -10,6 +10,7 @@ class RoomController extends Controller
 {
     public function getByDormitory($id)
     {
-        return Room::where('dormitory_id', $id)->get();
+        return Room::where('dormitory_id', $id)
+            ->where('reserve_status', false)->get();
     }
 }
