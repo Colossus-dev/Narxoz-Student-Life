@@ -6,9 +6,11 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Models\Role;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -72,6 +74,13 @@ class UserResource extends Resource
                     ->label('Телефон')
                     ->tel(),
 
+                FileUpload::make('avatar')
+                    ->label('Фото профиля')
+                    ->image()
+                    ->imageEditor()
+                    ->directory('avatars') // Сохраняется в storage/app/public/avatars
+                    ->columnSpanFull(),
+
                 Select::make('faculty')
                     ->label('Факультет')
                     ->options([
@@ -117,6 +126,7 @@ class UserResource extends Resource
                 TextColumn::make('gpa')->label('GPA')->sortable(),
                 TextColumn::make('birthday')->label('Дата рождения')->date()->sortable(),
                 TextColumn::make('phone')->label('Телефон'),
+                ImageColumn::make('avatar')->label('Аватар')->circular(), // круглое фото
                 TextColumn::make('faculty')->label('Факультет')->sortable(),
                 TextColumn::make('admission')->label('Дата поступления')->date()->sortable(),
                 TextColumn::make('completion')->label('Дата окончания')->date()->sortable(),

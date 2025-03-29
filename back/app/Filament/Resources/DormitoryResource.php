@@ -28,7 +28,16 @@ class DormitoryResource extends Resource
                     ->label('Название общежития') // ← перевод
                     ->required()
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('image')
+                    ->label('Фото общежития')
+                    ->image()
+                    ->imagePreviewHeight('150')
+                    ->directory('dormitories')
+                    ->maxSize(5024)
+                    ->columnSpanFull(),
+
             ]);
+
     }
 
     public static function table(Table $table): Table
@@ -37,6 +46,12 @@ class DormitoryResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('name')->label('Название общежития')->sortable()->searchable(), // ← перевод
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Фото')
+                    ->disk('public')
+                    ->width(80)
+                    ->height(60),
+
                 TextColumn::make('created_at')->label('Дата создания')->dateTime()->sortable(), // ← перевод
             ])
             ->filters([])

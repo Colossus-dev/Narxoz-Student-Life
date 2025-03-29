@@ -25,8 +25,8 @@ const Profile = () => {
                 <div className="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-10 flex items-start border border-gray-200">
                     <div className="flex flex-col items-center w-1/3 pr-10 border-r border-gray-300">
                         <img
-                            src="/profile_icon.png"
-                            alt="User Profile"
+                            src={`http://localhost:8000/storage/${user.avatar}`}
+                            alt={user.name}
                             className="w-40 h-40 rounded-full border-4 border-gray-300 shadow-md object-cover mb-5"
                         />
                     </div>

@@ -15,6 +15,7 @@ import Cart from "./pages/Cart";
 import PrivateRoute from "./components/PrivateRoute";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import Contacts from "./pages/Contacts"; // путь может отличаться
 
 
 const theme = createTheme({
@@ -97,6 +98,14 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+                        <Route
+                            path="/contacts"
+                            element={
+                                <PrivateRoute>
+                                    <Contacts />
+                                </PrivateRoute>
+                        } />
+
                         <Route
                             path="/shop"
                             element={

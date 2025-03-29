@@ -1,32 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaInstagram, FaEnvelope, FaPhoneAlt, FaChevronUp, FaHeart } from "react-icons/fa";
 
 const Footer = () => {
+    const [showTop, setShowTop] = useState(false);
+
+    useEffect(() => {
+        const toggleVisible = () => {
+            setShowTop(window.scrollY > 300);
+        };
+
+        window.addEventListener("scroll", toggleVisible);
+        return () => window.removeEventListener("scroll", toggleVisible);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
-        <footer className="bg-gray-900 text-white py-6 mt-10">
-            <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-                {/* Логотип и текст */}
-                <div className="mb-4 md:mb-0 text-center md:text-left">
-                    <h2 className="text-xl font-bold">Narxoz Student Life</h2>
-                    <p className="text-gray-400 text-sm">Все права защищены © 2025</p>
+        <>
+            <footer className="bg-gray-100 text-gray-800 pt-10 pb-6 border-t border-gray-300">
+                <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start text-sm">
+                    {/* Блок 1: Название */}
+                    <div className="space-y-2 text-center md:text-left">
+                        <h2 className="text-2xl font-extrabold text-gray-900">Narxoz Life</h2>
+                        <p className="text-gray-600">Платформа для комфортной студенческой жизни</p>
+                        <p className="text-gray-500">© 2025 Все права защищены</p>
+                    </div>
+
+                    {/* Блок 2: Навигация */}
+                    <div className="text-center md:text-left">
+                        <h3 className="text-gray-900 font-semibold mb-2">Навигация</h3>
+                        <ul className="space-y-1">
+                            <li><Link to="/" className="text-gray-600 hover:text-gray-900 transition">Главная</Link></li>
+                            <li><Link to="/booking" className="text-gray-600 hover:text-gray-900 transition">Бронирование</Link></li>
+                            <li><Link to="/my-bookings" className="text-gray-600 hover:text-gray-900 transition">Мои бронирования</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Блок 3: Контакты */}
+                    <div className="text-center md:text-right space-y-2">
+                        <h3 className="text-gray-900 font-semibold mb-2">Контакты</h3>
+                        <p className="flex justify-center md:justify-end items-center gap-2 text-gray-600">
+                            <FaEnvelope /> support@narxoz.kz
+                        </p>
+                        <p className="flex justify-center md:justify-end items-center gap-2 text-gray-600">
+                            <FaPhoneAlt /> +7 (777) 123-45-67
+                        </p>
+                        <a
+                            href="https://instagram.com/narxozuniversity"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex justify-center md:justify-end items-center gap-2 text-[#D50032] hover:text-red-600 transition"
+                        >
+                            <FaInstagram /> Instagram
+                        </a>
+                    </div>
                 </div>
 
-                {/* Навигация */}
-                <div className="flex space-x-6">
-                    <Link to="/" className="text-gray-300 hover:text-white transition">Главная</Link>
-                    <Link to="/shop" className="text-gray-300 hover:text-white transition">Магазин</Link>
-                    <Link to="/booking" className="text-gray-300 hover:text-white transition">Бронирование</Link>
-                    <Link to="/my-bookings" className="text-gray-300 hover:text-white transition">Мои бронирования</Link>
-                    <Link to="/barbershop" className="text-gray-300 hover:text-white transition">Барбершоп</Link>
+                {/* Made with ❤️ */}
+                <div className="mt-8 text-center text-sm text-gray-500 flex items-center justify-center gap-1">
+                    Сделано с <FaHeart className="text-red-500 animate-pulse" /> в Narxoz
                 </div>
+            </footer>
 
-                {/* Контакты */}
-                <div className="text-center md:text-right">
-                    <p className="text-gray-400 text-sm">Email: support@narxoz.kz</p>
-                    <p className="text-gray-400 text-sm">Телефон: +7 (777) 123-45-67</p>
-                </div>
-            </div>
-        </footer>
+            {/* Кнопка "Вверх" */}
+            {showTop && (
+                <button
+                    onClick={scrollToTop}
+                    className="fixed bottom-6 right-6 bg-[#D50032] hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition z-50"
+                    title="Наверх"
+                >
+                    <FaChevronUp />
+                </button>
+            )}
+        </>
     );
 };
 
