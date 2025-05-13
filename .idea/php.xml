@@ -160,6 +160,11 @@
       <path value="$PROJECT_DIR$/back/vendor/livewire/livewire" />
       <path value="$PROJECT_DIR$/back/vendor/masterminds/html5" />
       <path value="$PROJECT_DIR$/back/vendor/anourvalar/eloquent-serialize" />
+      <path value="$PROJECT_DIR$/back/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/temporary-directory" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/image-optimizer" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/image" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/laravel-medialibrary" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

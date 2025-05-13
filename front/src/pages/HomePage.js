@@ -1,19 +1,48 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
+import axios from "axios";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useAuth } from "../context/AuthContext";
 import PageWrapper from "../components/PageWrapper";
 import FadeInOnScroll from "../components/FadeInOnScroll";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const HomePage = () => {
     const { user, loading } = useAuth();
     const [openIndex, setOpenIndex] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        surname: "",
+        phone: "",
+        message: "",
+    });
 
     if (loading) return <p className="text-center mt-10 text-lg">Загрузка...</p>;
 
     const toggleFAQ = (index) => {
         setOpenIndex(openIndex === index ? null : index);
+    };
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            const res = await axios.post("http://localhost:8000/api/feedback/submit", formData);
+            toast.success("Успешно отправлено!");
+            setFormData({ name: "", surname: "", phone: "", message: "" });
+        } catch (error) {
+            toast.error("Ошибка при отправке. Попробуйте позже.");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const settings = {
@@ -36,22 +65,33 @@ const HomePage = () => {
             image: "/dorm1.png",
             title: "Общежития",
             link: "/booking",
-            text: "В Нархоз Университете предоставляются комфортные общежития с современными условиями проживания. Каждый студент, нуждающийся в жилье, может подать заявку на бронирование. Все корпуса расположены рядом с учебными зданиями, а комнаты обустроены всем необходимым для учебы и отдыха.",
+            text: "В Нархоз Университете предоставляются комфортные общежития с современными условиями проживания...",
+        },
+        {
+            image: "/sd.jpeg",
+            title: "Запись к Эдвайзеру",
+            link: "/advisor-booking",
+            text: "Записывайся к Эдвайзеру своей Школы, чтобы найти ответ.",
+        },
+        {
+            image: "/admed.jpg",
+            title: "Запись к Asmed",
+            link: "/asmed-booking",
+            text: "Записывайся к Asmed.",
         },
         {
             image: "/barber.png",
             title: "Narxoz Barbershop",
             link: "/barbershop",
-            text: "Narxoz Barbershop — это стильное и уютное место на территории университета, где студенты могут получить профессиональные услуги по стрижке и уходу за волосами. Быстро, удобно и по доступной цене — всё, что нужно, не выходя из кампуса.",
+            text: "Narxoz Barbershop — это стильное и уютное место на территории университета...",
         },
         {
             image: "/shop.png",
             title: "Narxoz Shop",
             link: "/shop",
-            text: "Narxoz Shop — официальный магазин с брендированной продукцией университета. Здесь вы найдете одежду, аксессуары, канцелярские товары и сувениры с символикой Нархоза. Отличный способ подчеркнуть свою причастность к университетской жизни!",
+            text: "Narxoz Shop — официальный магазин с брендированной продукцией университета...",
         },
     ];
-
 
     const faqData = [
         {
@@ -74,6 +114,7 @@ const HomePage = () => {
 
     return (
         <PageWrapper>
+            <ToastContainer position="top-right" autoClose={4000} />
             <h1 className="text-3xl font-bold text-[#D50032] mb-10 font-montserrat">
                 Добро пожаловать, {user?.name}
             </h1>
@@ -168,33 +209,62 @@ const HomePage = () => {
                     {/* Форма */}
                     <div className="w-full md:w-1/2">
                         <h2 className="text-2xl font-bold mb-4">Имеются интересующие вопросы?</h2>
-                        <form className="space-y-4">
-                            {["Имя", "Фамилия", "Телефон", "Повод"].map((label, idx) =>
-                                label === "Повод" ? (
-                                    <div key={idx}>
-                                        <label className="block text-sm font-medium text-gray-700">{label}</label>
-                                        <textarea
-                                            rows="3"
-                                            className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
-                                        ></textarea>
-                                    </div>
-                                ) : (
-                                    <div key={idx}>
-                                        <label className="block text-sm font-medium text-gray-700">{label}</label>
-                                        <input
-                                            type={label === "Телефон" ? "tel" : "text"}
-                                            placeholder={label === "Телефон" ? "+7 (XXX) XXX XXXX" : ""}
-                                            className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
-                                            required
-                                        />
-                                    </div>
-                                )
-                            )}
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Имя</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Фамилия</label>
+                                <input
+                                    type="text"
+                                    name="surname"
+                                    value={formData.surname}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Телефон</label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="+7 (XXX) XXX XXXX"
+                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Повод</label>
+                                <textarea
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    rows="3"
+                                    required
+                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                ></textarea>
+                            </div>
+
                             <button
                                 type="submit"
-                                className="bg-[#D50032] text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all"
+                                disabled={submitting}
+                                className="bg-[#D50032] text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all disabled:opacity-50"
                             >
-                                Отправить
+                                {submitting ? "Отправка..." : "Отправить"}
                             </button>
                         </form>
                     </div>

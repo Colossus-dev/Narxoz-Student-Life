@@ -1,65 +1,122 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
+import axios from "axios";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
-const categories = ["Одежда", "Аксессуары", "Канцелярия"];
-
-const products = [
-    { id: 1, name: "Футболка Narxoz", price: 5000, category: "Одежда", image: "/tshirt.jpg" },
-    { id: 2, name: "Худи Narxoz", price: 12000, category: "Одежда", image: "/hoodie.jpg" },
-    { id: 3, name: "Блокнот", price: 2500, category: "Канцелярия", image: "/notebook.jpg" },
-    { id: 4, name: "Бейсболка Narxoz", price: 3000, category: "Аксессуары", image: "/cap.jpg" },
-];
-
-const Shop = () => {
+const Shop = ({ cart }) => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState("Все");
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState(["Все"]);
+    const [loading, setLoading] = useState(true);
+    const [showPreview, setShowPreview] = useState(false);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get("http://localhost:8000/api/products");
+                const data = response.data;
+
+                setProducts(data);
+
+                const uniqueCategories = [...new Set(data.map(p => p.category))];
+                setCategories(["Все", ...uniqueCategories]);
+            } catch (error) {
+                console.error("Ошибка загрузки продуктов:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const filteredProducts =
-        selectedCategory === "Все" ? products : products.filter((p) => p.category === selectedCategory);
+        selectedCategory === "Все"
+            ? products
+            : products.filter((p) => p.category === selectedCategory);
 
     return (
-        <>
-            <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-                <h1 className="text-3xl font-bold text-center mb-6">Narxoz Shop</h1>
+        <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
+            <h1 className="text-3xl font-bold text-center mb-6">Narxoz Shop</h1>
 
-                {/* Фильтр по категориям */}
-                <div className="flex justify-center gap-4 mb-6">
+            {/* Фильтр по категориям */}
+            <div className="flex justify-center gap-4 mb-6 flex-wrap">
+                {categories.map((cat) => (
                     <button
-                        onClick={() => setSelectedCategory("Все")}
-                        className={`px-4 py-2 rounded-lg ${selectedCategory === "Все" ? "bg-red-500 text-white" : "bg-gray-200"}`}
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-4 py-2 rounded-lg transition ${
+                            selectedCategory === cat ? "bg-red-500 text-white" : "bg-gray-200"
+                        }`}
                     >
-                        Все
+                        {cat}
                     </button>
-                    {categories.map((cat) => (
-                        <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            className={`px-4 py-2 rounded-lg ${selectedCategory === cat ? "bg-red-500 text-white" : "bg-gray-200"}`}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
+                ))}
+            </div>
 
-                {/* Товары */}
-                <div className="grid grid-cols-2 gap-6">
+            {/* Загрузка или товары */}
+            {loading ? (
+                <p className="text-center text-gray-500">Загрузка...</p>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProducts.map((product) => (
                         <div key={product.id} className="border p-4 rounded-lg shadow-lg">
-                            <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-lg mb-4" />
+                            <img
+                                src={product.image_url}
+                                alt={product.name}
+                                className="w-full h-40 object-cover rounded-lg mb-4"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "/fallback.jpg";
+                                }}
+                            />
                             <h2 className="text-lg font-bold">{product.name}</h2>
                             <p className="text-gray-700">Цена: {product.price} ₸</p>
                             <button
                                 onClick={() => navigate(`/shop/${product.id}`)}
-                                className="mt-3 bg-red-600 text-white px-4 py-2 rounded-lg"
+                                className="mt-3 bg-red-600 text-white px-4 py-2 rounded-lg w-full"
                             >
                                 Подробнее
                             </button>
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Плавающая кнопка корзины */}
+            <div
+                className="fixed bottom-6 right-6 z-50"
+                onMouseEnter={() => setShowPreview(true)}
+                onMouseLeave={() => setShowPreview(false)}
+            >
+                <button
+                    onClick={() => navigate("/cart")}
+                    className="flex items-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-red-700 transition-all"
+                >
+                    <ShoppingCartIcon />
+                    <span className="font-semibold">Корзина ({cart.length})</span>
+                </button>
+
+                {/* Превью содержимого корзины */}
+                {showPreview && cart.length > 0 && (
+                    <div className="absolute bottom-16 right-0 bg-white border border-gray-300 shadow-xl rounded-lg w-72 p-4 text-sm">
+                        <h3 className="font-bold mb-2">В корзине:</h3>
+                        <ul className="space-y-1 max-h-40 overflow-auto">
+                            {cart.map((item, i) => (
+                                <li key={i} className="flex justify-between border-b pb-1">
+                                    <span>{item.name}</span>
+                                    <span>x{item.quantity}</span>
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="text-right font-semibold mt-2">
+                            Итого: {cart.reduce((sum, i) => sum + i.price * i.quantity, 0)} ₸
+                        </p>
+                    </div>
+                )}
             </div>
-        </>
+        </div>
     );
 };
 

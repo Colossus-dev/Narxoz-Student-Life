@@ -11,6 +11,7 @@ import {
     IconButton,
     Tooltip,
 } from "@mui/material";
+
 import { useAuth } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
 import "./Header.css";

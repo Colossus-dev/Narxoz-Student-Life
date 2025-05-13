@@ -42,6 +42,11 @@
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/invade" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-package-tools" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/html-sanitizer" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/maennchen/zipstream-php" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/image" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/image-optimizer" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-medialibrary" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/temporary-directory" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

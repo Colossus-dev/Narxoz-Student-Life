@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // путь поправь под свой
 
 
 const theme = createTheme({
@@ -41,23 +42,16 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const { login: loginUser } = useAuth(); // вытаскиваем login из контекста
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setError(null);
 
         try {
-            // Шаг 1: Получаем CSRF cookie
-            await axios.get('http://localhost:8000/sanctum/csrf-cookie', {
-                withCredentials: true,
-            });
+            await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
 
-            // Шаг 2: Отправляем логин
-            const response = await axios.post(
-                'http://localhost:8000/api/login',
-                {
-                    login,
-                    password,
-                },
+            const response = await axios.post('http://localhost:8000/api/login',
+                { login, password },
                 {
                     withCredentials: true,
                     headers: {
@@ -66,11 +60,9 @@ export default function SignIn() {
                 }
             );
 
-            const token = response.data.token;
-            localStorage.setItem('token', token);
-
-            navigate('/');
-            // window.location.href = '/dashboard'; // опционально
+            const { token, user } = response.data;
+            loginUser(user, token);         // 🔥 Обновление контекста
+            navigate('/');                  // Переход на главную
         } catch (err) {
             setError('Неверный логин или пароль');
         }

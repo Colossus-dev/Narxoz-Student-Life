@@ -76,7 +76,7 @@ const Contacts = () => {
             {/* Студентам и Абитуриентам */}
             <div className="grid md:grid-cols-2 gap-12 mb-16">
                 <div className="flex flex-col items-center text-center">
-                    <h2 className="text-2xl font-semibold text-[#D50032] mb-6">🎓 Студентам</h2>
+                    <h2 className="text-2xl font-semibold text-[#D50032] mb-6">Студентам</h2>
                     <div className="space-y-6 w-full">
                         <ContactCard
                             title="Центр обслуживания студентов"
@@ -92,7 +92,7 @@ const Contacts = () => {
                 </div>
 
                 <div className="flex flex-col items-center text-center">
-                    <h2 className="text-2xl font-semibold text-[#D50032] mb-6">📚 Абитуриентам</h2>
+                    <h2 className="text-2xl font-semibold text-[#D50032] mb-6">Абитуриентам</h2>
                     <div className="space-y-6 w-full">
                         <ContactCard
                             title="Приемная комиссия"
@@ -112,7 +112,7 @@ const Contacts = () => {
 
             {/* Факультеты */}
             <div>
-                <h2 className="text-2xl font-semibold text-center text-[#D50032] mb-6">🏫 Контакты школ</h2>
+                <h2 className="text-2xl font-semibold text-center text-[#D50032] mb-6">Контакты школ</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                     {facultyContacts.map((faculty, index) => (
                         <ContactCard key={index} title={faculty.title} email={faculty.email} />

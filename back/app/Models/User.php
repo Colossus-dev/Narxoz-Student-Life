@@ -48,6 +48,25 @@ class User extends Authenticatable
 
     public function hasRole($role)
     {
-        return $this->role && $this->role->name === $role; // Adjust based on your database structure
+        return $this->role && $this->role->name === $role;
     }
+    public function bookings()
+    {
+        return $this->hasMany(BarbershopBooking::class);
+    }
+    public function barbershopBookings()
+    {
+        return $this->hasMany(\App\Models\BarbershopBooking::class);
+    }
+
+    public function advisorBookings()
+    {
+        return $this->hasMany(\App\Models\AdvisorBooking::class);
+    }
+
+    public function asmedBookings()
+    {
+        return $this->hasMany(\App\Models\AsmedBooking::class);
+    }
+
 }

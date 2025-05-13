@@ -17,7 +17,10 @@ import { ToastContainer } from 'react-toastify';
 import PrivateRoute from "./components/PrivateRoute";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import Contacts from "./pages/Contacts"; // путь может отличаться
+import Contacts from "./pages/Contacts";
+import OrderSuccess from "./pages/OrderSuccess";
+import AdvisorBookingPage from "./pages/AdvisorBookingPage";
+import AsmedBookingPage from "./pages/AsmedBookingPage"; // путь может отличаться
 
 
 const theme = createTheme({
@@ -38,6 +41,9 @@ function App() {
     const removeFromCart = (index) => {
         const updatedCart = cart.filter((_, i) => i !== index);
         setCart(updatedCart);
+    };
+    const clearCart = () => {
+        setCart([]);
     };
 
     return (
@@ -112,9 +118,10 @@ function App() {
                             path="/shop"
                             element={
                                 <PrivateRoute>
-                                    <ShopPage />
+                                    <ShopPage cart={cart} />
                                 </PrivateRoute>
                             }
+                        />
                         />
                         <Route
                             path="/shop/:id"
@@ -128,7 +135,31 @@ function App() {
                             path="/cart"
                             element={
                                 <PrivateRoute>
-                                    <Cart cart={cart} removeFromCart={removeFromCart} />
+                                    <Cart cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/order-success"
+                            element={
+                                <PrivateRoute>
+                                    <OrderSuccess />
+                                </PrivateRoute>
+                            }
+                            />
+                        <Route
+                            path="/advisor-booking"
+                            element={
+                                <PrivateRoute>
+                                    <AdvisorBookingPage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/asmed-booking"
+                            element={
+                                <PrivateRoute>
+                                    <AsmedBookingPage />
                                 </PrivateRoute>
                             }
                         />
