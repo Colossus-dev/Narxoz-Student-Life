@@ -1,8 +1,10 @@
-// components/PaymentModal.js
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
+    const { t } = useTranslation();
+
     const [cardNumber, setCardNumber] = useState("");
     const [name, setName] = useState("");
     const [exp, setExp] = useState("");
@@ -10,7 +12,6 @@ const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Простая валидация
         if (cardNumber && name && exp && cvc) {
             onConfirm();
             onClose();
@@ -32,11 +33,13 @@ const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                     >
-                        <h2 className="text-xl font-bold mb-4">💳 Оплата бронирования</h2>
+                        <h2 className="text-xl font-bold mb-4">
+                            💳 {t("paymentModal.title")}
+                        </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <input
                                 type="text"
-                                placeholder="Номер карты"
+                                placeholder={t("paymentModal.cardNumber")}
                                 value={cardNumber}
                                 onChange={(e) => setCardNumber(e.target.value)}
                                 className="w-full px-4 py-2 border rounded"
@@ -44,7 +47,7 @@ const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
                             />
                             <input
                                 type="text"
-                                placeholder="Имя владельца"
+                                placeholder={t("paymentModal.cardHolder")}
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-full px-4 py-2 border rounded"
@@ -53,7 +56,7 @@ const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
                             <div className="flex gap-4">
                                 <input
                                     type="text"
-                                    placeholder="MM/YY"
+                                    placeholder={t("paymentModal.expiry")}
                                     value={exp}
                                     onChange={(e) => setExp(e.target.value)}
                                     className="w-full px-4 py-2 border rounded"
@@ -61,7 +64,7 @@ const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
                                 />
                                 <input
                                     type="text"
-                                    placeholder="CVC"
+                                    placeholder={t("paymentModal.cvc")}
                                     value={cvc}
                                     onChange={(e) => setCvc(e.target.value)}
                                     className="w-full px-4 py-2 border rounded"
@@ -74,13 +77,13 @@ const PaymentModal = ({ isOpen, onClose, onConfirm }) => {
                                     onClick={onClose}
                                     className="px-4 py-2 border rounded hover:bg-gray-100"
                                 >
-                                    Отмена
+                                    {t("paymentModal.cancel")}
                                 </button>
                                 <button
                                     type="submit"
                                     className="bg-[#D50032] text-white px-4 py-2 rounded hover:bg-red-700"
                                 >
-                                    Оплатить
+                                    {t("paymentModal.pay")}
                                 </button>
                             </div>
                         </form>

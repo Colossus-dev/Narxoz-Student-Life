@@ -1,0 +1,163 @@
+{
+  "homepage": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "success": "Successfully submitted!",
+    "error": "Error while submitting. Try again later.",
+    "faq": "Frequently Asked Questions",
+    "mapTitle": "We are located here",
+    "formTitle": "Have a question?",
+    "name": "Name",
+    "surname": "Surname",
+    "phone": "Phone",
+    "reason": "Message",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "namePlaceholder": "Enter your name",
+    "phonePlaceholder": "+7 (XXX) XXX XXXX",
+    "dormsTitle": "Dormitories",
+    "dormsText": "Narxoz University offers comfortable dormitories with modern amenities...",
+    "adviserTitle": "Adviser Appointment",
+    "adviserText": "Schedule an appointment with your School’s adviser.",
+    "asmedTitle": "Narxoz Medical Center",
+    "asmedText": "Book an appointment with Narxoz Medical Center.",
+    "shopTitle": "Narxoz Shop",
+    "shopText": "Narxoz Shop is the official store with university-branded merchandise.",
+    "faq1q": "What are the requirements to enter the university?",
+    "faq1a": "Requirements include UNT scores and general admission documents...",
+    "faq2q": "What support is provided for international students?",
+    "faq2a": "There are dedicated services for international students at Narxoz.",
+    "faq3q": "Can I exchange or return clothing if it doesn't fit?",
+    "faq3a": "Returns or exchanges are not available."
+  },
+  "header": {
+    "home": "Home",
+    "booking": "Booking",
+    "myBookings": "My Bookings",
+    "contacts": "Contacts",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "footer": {
+    "tagline": "A platform for comfortable student life",
+    "rights": "All rights reserved",
+    "navigation": "Navigation",
+    "contacts": "Contacts",
+    "madeWith": "Made with",
+    "scrollTop": "Scroll to top"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "students": "For Students",
+    "applicants": "For Applicants",
+    "studentServiceCenter": "Student Service Center",
+    "office": "Office",
+    "admission": "Admissions Office",
+    "militaryDepartment": "Military Department",
+    "faculties": "Faculty Contacts",
+    "writeOnWhatsapp": "Write on WhatsApp",
+    "humanitarianSchool": "School of Humanities",
+    "lawSchool": "School of Law and Public Administration",
+    "economySchool": "School of Economics and Management",
+    "digitalSchool": "School of Digital Technologies"
+  },
+  "booking": {
+    "title": "Dormitory Booking"
+  },
+  "dormitorySelector": {
+    "loading": "Loading dormitories...",
+    "title": "Select a Dormitory",
+    "roomsCount": "Number of rooms"
+  },
+  "roomGrid": {
+    "loading": "Loading rooms...",
+    "title": "Rooms in {{dormitory}}",
+    "allFloors": "All Floors",
+    "floor": "Floor",
+    "room": "Room",
+    "available": "Available",
+    "occupied": "Occupied",
+    "month": "month",
+    "capacity": "Capacity"
+  },
+  "bookingForm": {
+    "title": "Booking Form",
+    "dormitory": "Dormitory",
+    "room": "Room",
+    "city": "City",
+    "cityPlaceholder": "e.g. Almaty",
+    "privileges": "Privileges (if any)",
+    "privilegesPlaceholder": "Large family, disability, etc.",
+    "uploadLabel": "Attach document (PDF/JPG/PNG)",
+    "removeFile": "Remove file",
+    "submit": "Submit Application",
+    "loading": "Submitting...",
+    "success": "🎉 Application sent successfully!",
+    "alreadySubmitted": "You have already applied for a dormitory!!!",
+    "error": "❌ Error while submitting. Please try again later."
+  },
+  "paymentModal": {
+    "title": "Booking Payment",
+    "cardNumber": "Card Number",
+    "cardHolder": "Cardholder Name",
+    "expiry": "MM/YY",
+    "cvc": "CVC",
+    "cancel": "Cancel",
+    "pay": "Pay"
+  },
+  "asmed": {
+    "title": "Narxoz Medical Point Appointment",
+    "subtitle": "Select a date and time",
+    "date": "Date:",
+    "time": "Time:",
+    "reason": "Reason for visit:",
+    "reason_placeholder": "Describe your concern or reason for visiting",
+    "book": "Book Now",
+    "submitting": "Submitting...",
+    "occupied": "occupied",
+    "confirm_title": "Confirm your appointment?",
+    "yes": "Yes",
+    "no": "No",
+    "alert_fill_fields": "Please fill in all fields",
+    "alert_already_booked": "You already have an appointment at the Medical Point.",
+    "alert_success": "You have successfully booked your Narxoz Medical Point appointment.",
+    "alert_error": "An error occurred. Please try again later."
+  },
+  "product": {
+    "loading": "Loading...",
+    "not_found": "Product not found",
+    "price": "Price",
+    "size": "Size",
+    "quantity": "Quantity",
+    "total": "Total",
+    "add_to_cart": "Add to cart"
+  },
+  "shop": {
+    "title": "Narxoz Shop",
+    "all": "All",
+    "loading": "Loading...",
+    "price": "Price",
+    "details": "More details",
+    "cart": "Cart",
+    "in_cart": "In cart:",
+    "total": "Total"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "empty_alert": "Your cart is empty.",
+    "checkout": "Place Order",
+    "remove": "Remove",
+    "price": "Price",
+    "size": "Size",
+    "total": "Total",
+    "checkout_error": "Error during checkout"
+  },
+  "order_success": {
+    "title": "Thank you for your order!",
+    "message": "Your order has been successfully placed. Payment is due upon pickup.\nYou can collect it at our campus store.",
+    "back_to_shop": "Back to shop"
+  }
+
+
+}

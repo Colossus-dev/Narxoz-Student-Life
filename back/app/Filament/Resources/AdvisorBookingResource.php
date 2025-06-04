@@ -19,9 +19,9 @@ class AdvisorBookingResource extends Resource
     protected static ?string $model = AdvisorBooking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
-    protected static ?string $navigationGroup = 'Студенты';
-    protected static ?string $modelLabel = 'Запись к эдвайзеру';
-    protected static ?string $pluralModelLabel = 'Записи к эдвайзеру';
+    protected static ?string $navigationGroup = 'Эдвайзер';
+    protected static ?string $modelLabel = 'Эдвайзерге жазылу';
+    protected static ?string $pluralModelLabel = 'Эдвайзерге жазылу';
 
     public static function form(Form $form): Form
     {

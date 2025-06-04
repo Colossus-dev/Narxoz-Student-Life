@@ -11,6 +11,8 @@ import {
     IconButton,
     Tooltip,
 } from "@mui/material";
+import LanguageSwitcher from "./languageSwitcher";
+import { useTranslation } from "react-i18next"; // ✅ импорт i18n
 
 import { useAuth } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
@@ -21,6 +23,7 @@ const Header = () => {
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
     const { user, logout } = useAuth();
+    const { t } = useTranslation(); // ✅ инициализация перевода
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -60,23 +63,24 @@ const Header = () => {
                         display: { xs: "none", sm: "flex" },
                         gap: 4,
                         fontWeight: 600,
-                        fontSize: "1.1rem", // увеличенный размер
+                        fontSize: "1.1rem",
                         alignItems: "center",
                     }}
                 >
-                    <Link className="nav-link" to="/">Главная</Link>
-                    <Link className="nav-link" to="/booking">Бронирование</Link>
-                    <Link className="nav-link" to="/my-bookings">Мои бронирования</Link>
-                    <Link className="nav-link" to="/contacts">Контакты</Link>
+                    <Link className="nav-link" to="/">{t("header.home")}</Link>
+                    <Link className="nav-link" to="/booking">{t("header.booking")}</Link>
+                    <Link className="nav-link" to="/my-bookings">{t("header.myBookings")}</Link>
+                    <Link className="nav-link" to="/contacts">{t("header.contacts")}</Link>
                 </Box>
 
-                {/* Профиль */}
+                {/* Профиль и смена языка */}
                 {user && (
-                    <Box display="flex" alignItems="center" gap={1}>
+                    <Box display="flex" alignItems="center" gap={2}>
+                        <LanguageSwitcher />
                         <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1rem" }}>
                             {user.name}
                         </Typography>
-                        <Tooltip title="Профиль">
+                        <Tooltip title={t("header.profile")}>
                             <IconButton onClick={handleClick} sx={{ p: 0 }}>
                                 <Avatar
                                     alt={user.name}
@@ -101,8 +105,8 @@ const Header = () => {
                                 },
                             }}
                         >
-                            <MenuItem component={Link} to="/profile">Профиль</MenuItem>
-                            <MenuItem onClick={handleLogout}>Выйти</MenuItem>
+                            <MenuItem component={Link} to="/profile">{t("header.profile")}</MenuItem>
+                            <MenuItem onClick={handleLogout}>{t("header.logout")}</MenuItem>
                         </Menu>
                     </Box>
                 )}

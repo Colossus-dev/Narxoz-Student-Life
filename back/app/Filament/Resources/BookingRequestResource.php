@@ -24,8 +24,9 @@ class BookingRequestResource extends Resource
 {
     protected static ?string $model = BookingRequest::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationGroup = 'Управление общежитиями';
-
+    protected static ?string $navigationGroup = 'Жатақхана';
+    protected static ?string $navigationLabel = 'Сұранымдар';
+    protected static ?string $pluralModelLabel = 'Сұранымдар';
     public static function form(Form $form): Form
     {
         return $form
@@ -89,9 +90,6 @@ class BookingRequestResource extends Resource
                     ->label('Договор подписан')
                     ->default(false),
 
-                ViewField::make('payment_qr')
-                    ->label('Kaspi QR-код')
-                    ->view('admin.partials.kaspi_qr'),
             ]);
     }
 
@@ -101,17 +99,13 @@ class BookingRequestResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('user.name')->label('Студент')->sortable()->searchable(),
-                TextColumn::make('room.room_number')->label('Номер комнаты')->sortable(),
-                TextColumn::make('city')->label('Город')->sortable(),
-                TextColumn::make('privileges')->label('Льготы')->sortable(),
+                TextColumn::make('room.room_number')->label('Комната Нөмірі')->sortable(),
+                TextColumn::make('city')->label('Қала')->sortable(),
+                TextColumn::make('privileges')->label('Льгота')->sortable(),
                 TextColumn::make('status')->label('Статус')->sortable(),
-                TextColumn::make('payment_status')->label('Статус оплаты')->sortable(),
-                BooleanColumn::make('contract_signed')->label('Договор подписан'),
-                TextColumn::make('payment_qr_url')
-                    ->label('Kaspi QR')
-                    ->formatStateUsing(fn($state) => $state ? '<a href="'.$state.'" target="_blank">Оплатить</a>' : 'Не сгенерировано')
-                    ->html(),
-                TextColumn::make('created_at')->label('Создано')->dateTime()->sortable(),
+                TextColumn::make('payment_status')->label('Төлем Статусы')->sortable(),
+                BooleanColumn::make('contract_signed')->label('Келісімшарт'),
+                TextColumn::make('created_at')->label('Құрылды')->dateTime()->sortable(),
             ])
             ->filters([])
             ->actions([

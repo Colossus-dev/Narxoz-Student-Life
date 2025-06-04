@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useTranslation } from "react-i18next";
 
 const Shop = ({ cart }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState("Все");
+    const [selectedCategory, setSelectedCategory] = useState("all");
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState(["Все"]);
+    const [categories, setCategories] = useState(["all"]);
     const [loading, setLoading] = useState(true);
     const [showPreview, setShowPreview] = useState(false);
 
@@ -20,7 +22,7 @@ const Shop = ({ cart }) => {
                 setProducts(data);
 
                 const uniqueCategories = [...new Set(data.map(p => p.category))];
-                setCategories(["Все", ...uniqueCategories]);
+                setCategories(["all", ...uniqueCategories]);
             } catch (error) {
                 console.error("Ошибка загрузки продуктов:", error);
             } finally {
@@ -32,13 +34,13 @@ const Shop = ({ cart }) => {
     }, []);
 
     const filteredProducts =
-        selectedCategory === "Все"
+        selectedCategory === "all"
             ? products
             : products.filter((p) => p.category === selectedCategory);
 
     return (
         <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
-            <h1 className="text-3xl font-bold text-center mb-6">Narxoz Shop</h1>
+            <h1 className="text-3xl font-bold text-center mb-6">{t("shop.title")}</h1>
 
             {/* Фильтр по категориям */}
             <div className="flex justify-center gap-4 mb-6 flex-wrap">
@@ -50,14 +52,14 @@ const Shop = ({ cart }) => {
                             selectedCategory === cat ? "bg-red-500 text-white" : "bg-gray-200"
                         }`}
                     >
-                        {cat}
+                        {cat === "all" ? t("shop.all") : cat}
                     </button>
                 ))}
             </div>
 
             {/* Загрузка или товары */}
             {loading ? (
-                <p className="text-center text-gray-500">Загрузка...</p>
+                <p className="text-center text-gray-500">{t("shop.loading")}</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProducts.map((product) => (
@@ -72,12 +74,14 @@ const Shop = ({ cart }) => {
                                 }}
                             />
                             <h2 className="text-lg font-bold">{product.name}</h2>
-                            <p className="text-gray-700">Цена: {product.price} ₸</p>
+                            <p className="text-gray-700">
+                                {t("shop.price")}: {product.price} ₸
+                            </p>
                             <button
                                 onClick={() => navigate(`/shop/${product.id}`)}
                                 className="mt-3 bg-red-600 text-white px-4 py-2 rounded-lg w-full"
                             >
-                                Подробнее
+                                {t("shop.details")}
                             </button>
                         </div>
                     ))}
@@ -95,13 +99,15 @@ const Shop = ({ cart }) => {
                     className="flex items-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-red-700 transition-all"
                 >
                     <ShoppingCartIcon />
-                    <span className="font-semibold">Корзина ({cart.length})</span>
+                    <span className="font-semibold">
+                        {t("shop.cart")} ({cart.length})
+                    </span>
                 </button>
 
                 {/* Превью содержимого корзины */}
                 {showPreview && cart.length > 0 && (
                     <div className="absolute bottom-16 right-0 bg-white border border-gray-300 shadow-xl rounded-lg w-72 p-4 text-sm">
-                        <h3 className="font-bold mb-2">В корзине:</h3>
+                        <h3 className="font-bold mb-2">{t("shop.in_cart")}</h3>
                         <ul className="space-y-1 max-h-40 overflow-auto">
                             {cart.map((item, i) => (
                                 <li key={i} className="flex justify-between border-b pb-1">
@@ -111,7 +117,7 @@ const Shop = ({ cart }) => {
                             ))}
                         </ul>
                         <p className="text-right font-semibold mt-2">
-                            Итого: {cart.reduce((sum, i) => sum + i.price * i.quantity, 0)} ₸
+                            {t("shop.total")}: {cart.reduce((sum, i) => sum + i.price * i.quantity, 0)} ₸
                         </p>
                     </div>
                 )}

@@ -3,8 +3,10 @@ import api from "../utils/api";
 import PageWrapper from "./PageWrapper";
 import { motion } from "framer-motion";
 import { FaUniversity } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const DormitorySelector = ({ onSelectDormitory }) => {
+    const { t } = useTranslation();
     const [dormitories, setDormitories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedId, setSelectedId] = useState(null);
@@ -29,12 +31,12 @@ const DormitorySelector = ({ onSelectDormitory }) => {
         onSelectDormitory(dorm);
     };
 
-    if (loading) return <p className="text-center text-gray-500">Загрузка общежитий...</p>;
+    if (loading) return <p className="text-center text-gray-500">{t("dormitorySelector.loading")}</p>;
 
     return (
         <PageWrapper>
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                Выберите общежитие
+                {t("dormitorySelector.title")}
             </h2>
 
             <div className="flex justify-center">
@@ -49,7 +51,6 @@ const DormitorySelector = ({ onSelectDormitory }) => {
                             className={`relative cursor-pointer overflow-hidden rounded-2xl border shadow-sm hover:shadow-xl transform transition hover:-translate-y-1 group
                             ${dorm.id === selectedId ? "ring-2 ring-[#D50032]" : ""}`}
                         >
-                            {/* Фото */}
                             <div className="h-40 w-full bg-gray-200">
                                 {dorm.image ? (
                                     <img
@@ -64,11 +65,10 @@ const DormitorySelector = ({ onSelectDormitory }) => {
                                 )}
                             </div>
 
-                            {/* Инфо */}
                             <div className="absolute bottom-0 w-full bg-black/50 text-white px-4 py-3">
                                 <h3 className="text-lg font-bold">{dorm.name}</h3>
                                 <p className="text-sm">
-                                    Кол-во комнат: {dorm.rooms_count}
+                                    {t("dormitorySelector.roomsCount")}: {dorm.rooms_count}
                                 </p>
                             </div>
                         </motion.div>
@@ -77,7 +77,6 @@ const DormitorySelector = ({ onSelectDormitory }) => {
             </div>
         </PageWrapper>
     );
-
 };
 
 export default DormitorySelector;

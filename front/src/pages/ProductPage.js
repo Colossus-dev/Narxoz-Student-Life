@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const ProductPage = ({ addToCart }) => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -28,8 +30,8 @@ const ProductPage = ({ addToCart }) => {
         fetchProduct();
     }, [id]);
 
-    if (loading) return <p className="text-center mt-10">Загрузка...</p>;
-    if (!product) return <p className="text-center mt-10 text-red-500">Товар не найден</p>;
+    if (loading) return <p className="text-center mt-10">{t("product.loading")}</p>;
+    if (!product) return <p className="text-center mt-10 text-red-500">{t("product.not_found")}</p>;
 
     const totalPrice = product.price * quantity;
 
@@ -57,12 +59,14 @@ const ProductPage = ({ addToCart }) => {
                 }}
             />
             <h1 className="text-2xl font-bold">{product.name}</h1>
-            <p className="text-gray-700">Цена: {product.price} ₸</p>
+            <p className="text-gray-700">
+                {t("product.price")}: {product.price} ₸
+            </p>
 
             {/* Размер */}
             {Array.isArray(product.sizes) && product.sizes.length > 0 && (
                 <div className="mt-4">
-                    <label className="font-semibold">Размер:</label>
+                    <label className="font-semibold">{t("product.size")}:</label>
                     <div className="flex gap-2 mt-2">
                         {product.sizes.map((size) => (
                             <button
@@ -79,10 +83,9 @@ const ProductPage = ({ addToCart }) => {
                 </div>
             )}
 
-
             {/* Кол-во */}
             <div className="mt-4">
-                <label className="font-semibold">Количество:</label>
+                <label className="font-semibold">{t("product.quantity")}:</label>
                 <input
                     type="number"
                     value={quantity}
@@ -93,13 +96,15 @@ const ProductPage = ({ addToCart }) => {
             </div>
 
             {/* Сумма */}
-            <p className="text-lg font-bold mt-4">Итого: {totalPrice} ₸</p>
+            <p className="text-lg font-bold mt-4">
+                {t("product.total")}: {totalPrice} ₸
+            </p>
 
             <button
                 onClick={handleAddToCart}
                 className="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg w-full"
             >
-                Добавить в корзину
+                {t("product.add_to_cart")}
             </button>
         </div>
     );

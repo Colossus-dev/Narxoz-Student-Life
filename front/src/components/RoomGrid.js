@@ -3,8 +3,10 @@ import api from "../utils/api";
 import PageWrapper from "./PageWrapper";
 import { motion } from "framer-motion";
 import { FaLock, FaBed, FaBuilding } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const RoomGrid = ({ dormitory, onSelectRoom }) => {
+    const { t } = useTranslation();
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFloor, setSelectedFloor] = useState(null);
@@ -30,13 +32,13 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
 
     const floors = Array.from(new Set(rooms.map((room) => room.floor))).sort((a, b) => a - b);
 
-    if (loading) return <p className="text-center text-gray-500">Загрузка комнат...</p>;
+    if (loading) return <p className="text-center text-gray-500">{t("roomGrid.loading")}</p>;
 
     return (
         <PageWrapper>
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-                    Комнаты в {dormitory.name}
+                    {t("roomGrid.title", { dormitory: dormitory.name })}
                 </h2>
 
                 {/* Фильтр по этажам */}
@@ -49,7 +51,7 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
                         }`}
                         onClick={() => setSelectedFloor(null)}
                     >
-                        Все этажи
+                        {t("roomGrid.allFloors")}
                     </button>
                     {floors.map((floor) => (
                         <button
@@ -61,7 +63,7 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
                             }`}
                             onClick={() => setSelectedFloor(floor)}
                         >
-                            Этаж {floor}
+                            {t("roomGrid.floor")} {floor}
                         </button>
                     ))}
                 </div>
@@ -80,29 +82,31 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="text-xl font-extrabold text-gray-800">
-                                    Комната {room.room_number}
+                                    {t("roomGrid.room")} {room.room_number}
                                 </h3>
                                 {!room.occupied ? (
-                                    <FaBed className="text-green-500 text-lg" title="Доступна" />
+                                    <FaBed className="text-green-500 text-lg" title={t("roomGrid.available")} />
                                 ) : (
-                                    <FaLock className="text-gray-400 text-lg" title="Занята" />
+                                    <FaLock className="text-gray-400 text-lg" title={t("roomGrid.occupied")} />
                                 )}
                             </div>
 
                             {/* 💸 Цена */}
                             <p className="text-lg text-[#D50032] font-semibold mb-2">
-                                {room.price?.toLocaleString()} тг / месяц
+                                {room.price?.toLocaleString()} тг / {t("roomGrid.month")}
                             </p>
 
                             {/* 👥 Вместимость */}
                             <p className="text-sm text-gray-600 mb-1">
-                                Вместимость: <strong>{room.capacity}</strong>
+                                {t("roomGrid.capacity")}: <strong>{room.capacity}</strong>
                             </p>
 
                             {/* 🏢 Этаж */}
                             <div className="flex items-center text-sm text-gray-500 gap-2 mb-3">
                                 <FaBuilding className="text-[#D50032]" />
-                                <span className="font-medium">Этаж: {room.floor}</span>
+                                <span className="font-medium">
+                                    {t("roomGrid.floor")}: {room.floor}
+                                </span>
                             </div>
 
                             {/* 🟢 Статус */}
@@ -110,7 +114,7 @@ const RoomGrid = ({ dormitory, onSelectRoom }) => {
                                 className={`inline-block px-3 py-1 text-xs font-semibold rounded-full
                                     ${!room.occupied ? "bg-green-100 text-green-700" : "bg-gray-300 text-gray-700"}`}
                             >
-                                {!room.occupied ? "Доступна" : "Занята"}
+                                {!room.occupied ? t("roomGrid.available") : t("roomGrid.occupied")}
                             </div>
                         </motion.div>
                     ))}

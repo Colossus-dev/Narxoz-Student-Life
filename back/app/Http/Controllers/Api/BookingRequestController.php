@@ -18,7 +18,7 @@ class BookingRequestController extends Controller
             'attached_file' => 'nullable|file|max:5120|mimes:pdf,jpg,jpeg,png',
         ]);
 
-        // 🔐 Проверка: есть ли уже заявка от пользователя
+        // Проверка: есть ли уже заявка от пользователя
         $alreadyExists = BookingRequest::where('user_id', $validated['user_id'])->exists();
 
         if ($alreadyExists) {

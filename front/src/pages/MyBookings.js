@@ -27,12 +27,12 @@ const MyBookings = () => {
             try {
                 const token = localStorage.getItem("token");
 
-                const [dormRes, barberRes, advisorRes, asmedRes] = await Promise.all([
-                    api.get("/my-bookings", { headers: { Authorization: `Bearer ${token}` } }),
-                    api.get("/my-barbershop-bookings", { headers: { Authorization: `Bearer ${token}` } }),
-                    api.get("/advisor-bookings/my", { headers: { Authorization: `Bearer ${token}` } }),
-                    api.get("/asmed/my", { headers: { Authorization: `Bearer ${token}` } }),
+                const [dormRes, advisorRes, asmedRes] = await Promise.all([
+                    api.get("/my-bookings", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
+                    api.get("/advisor-bookings/my", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
+                    api.get("/asmed/my", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
                 ]);
+
 
                 const dormBookings = dormRes.data.map((item) => ({
                     applicationType: "Общежитие",
@@ -45,14 +45,6 @@ const MyBookings = () => {
                     status: item.status,
                     payment_status: item.payment_status,
                     contract_signed: item.contract_signed,
-                }));
-
-                const barberBookings = barberRes.data.map((item) => ({
-                    applicationType: "Барбершоп",
-                    id: item.id,
-                    date: item.date,
-                    time: item.time,
-                    barber: item.barber,
                 }));
 
                 const advisorBookings = advisorRes.data.map((item) => ({
@@ -76,7 +68,6 @@ const MyBookings = () => {
 
                 setBookings([
                     ...dormBookings,
-                    ...barberBookings,
                     ...advisorBookings,
                     ...asmedBookings,
                 ]);
@@ -175,7 +166,6 @@ const MyBookings = () => {
                         >
                             <div className="flex items-center gap-2 text-lg font-semibold mb-3">
                                 {b.applicationType === "Общежитие" && <FaHome className="text-[#D50032]" />}
-                                {b.applicationType === "Барбершоп" && <FaCut className="text-[#D50032]" />}
                                 {b.applicationType === "Эдвайзер" && <FaUser className="text-[#D50032]" />}
                                 {b.applicationType === "АСМЕД" && <FaHeartbeat className="text-[#D50032]" />}
                                 {b.applicationType}
@@ -187,47 +177,52 @@ const MyBookings = () => {
                                         <p><strong>Общежитие:</strong> {b.dormitory}</p>
                                         <p><strong>Комната:</strong> {b.roomType}</p>
                                         <p><strong>Файл:</strong> {b.file ? "Прикреплён" : "—"}</p>
-                                        {b.status === "approved" && (
-                                            <div className="mt-4">
-                                                <p className="text-green-600 font-semibold mb-2">✅ Заявка одобрена!</p>
-                                                {b.payment_status !== "paid" ? (
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedBookingId(b.id);
-                                                            setShowModal(true);
-                                                        }}
-                                                        className="bg-[#D50032] text-white px-4 py-2 rounded-full hover:bg-red-700 transition"
-                                                    >
-                                                        Оплатить
-                                                    </button>
-                                                ) : !b.contract_signed ? (
-                                                    <div className="mt-4 bg-gray-50 border p-4 rounded-xl">
-                                                        <h4 className="font-bold mb-2 text-[#D50032]">📄 Договор</h4>
-                                                        <p className="text-sm text-gray-600 mb-4">
-                                                            Я подтверждаю, что ознакомлен(а) с условиями проживания и обязуюсь соблюдать внутренние правила общежития Нархоз Университета.
-                                                        </p>
+                                        <div className="mt-4">
+                                            {b.status === "pending" && (
+                                                <p className="text-yellow-600 font-semibold">⏳ Ваша заявка на
+                                                    рассмотрении</p>
+                                            )}
+                                            {b.status === "approved" && (
+                                                <>
+                                                    <p className="text-green-600 font-semibold mb-2">✅ Заявка
+                                                        одобрена!</p>
+                                                    {b.payment_status !== "paid" ? (
                                                         <button
-                                                            onClick={() => handleSignContract(b.id)}
-                                                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                                                            onClick={() => {
+                                                                setSelectedBookingId(b.id);
+                                                                setShowModal(true);
+                                                            }}
+                                                            className="bg-[#D50032] text-white px-4 py-2 rounded-full hover:bg-red-700 transition"
                                                         >
-                                                            Принять условия
+                                                            Оплатить
                                                         </button>
-                                                    </div>
-                                                ) : (
-                                                    <p className="text-sm text-green-700 font-medium mt-2 flex items-center gap-2">
-                                                        <FaCheckCircle className="text-green-600" /> Договор подписан
-                                                    </p>
-                                                )}
-                                            </div>
-                                        )}
-                                    </>
-                                )}
+                                                    ) : !b.contract_signed ? (
+                                                        <div className="mt-4 bg-gray-50 border p-4 rounded-xl">
+                                                            <h4 className="font-bold mb-2 text-[#D50032]">📄 Договор</h4>
+                                                            <p className="text-sm text-gray-600 mb-4">
+                                                                Я подтверждаю, что ознакомлен(а) с условиями проживания
+                                                                и обязуюсь соблюдать внутренние правила общежития Нархоз
+                                                                Университета.
+                                                            </p>
+                                                            <button
+                                                                onClick={() => handleSignContract(b.id)}
+                                                                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                                                            >
+                                                                Принять условия
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-sm text-green-700 font-medium mt-2 flex items-center gap-2">
+                                                            <FaCheckCircle className="text-green-600"/> Договор подписан
+                                                        </p>
+                                                    )}
+                                                </>
+                                            )}
+                                            {b.status === "rejected" && (
+                                                <p className="text-red-600 font-semibold">❌ Ваша заявка отклонена</p>
+                                            )}
+                                        </div>
 
-                                {b.applicationType === "Барбершоп" && (
-                                    <>
-                                        <p><strong>Дата:</strong> {b.date}</p>
-                                        <p><strong>Время:</strong> {b.time}</p>
-                                        <p><strong>Барбер:</strong> {b.barber}</p>
                                     </>
                                 )}
 

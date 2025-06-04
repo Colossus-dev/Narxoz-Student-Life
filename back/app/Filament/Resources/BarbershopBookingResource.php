@@ -18,7 +18,10 @@ class BarbershopBookingResource extends Resource
     protected static ?string $model = BarbershopBooking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'BarberShop';
 
+    protected static ?string $navigationLabel = 'Сұранымдар';
+    protected static ?string $pluralModelLabel = 'Сұранымдар';
     public static function form(Form $form): Form
     {
         return $form->schema([

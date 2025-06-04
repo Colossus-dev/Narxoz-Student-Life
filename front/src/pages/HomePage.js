@@ -8,9 +8,12 @@ import PageWrapper from "../components/PageWrapper";
 import FadeInOnScroll from "../components/FadeInOnScroll";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
     const { user, loading } = useAuth();
+    const { t } = useTranslation();
+
     const [openIndex, setOpenIndex] = useState(null);
     const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState({
@@ -20,7 +23,7 @@ const HomePage = () => {
         message: "",
     });
 
-    if (loading) return <p className="text-center mt-10 text-lg">Загрузка...</p>;
+    if (loading) return <p className="text-center mt-10 text-lg">{t("homepage.loading")}</p>;
 
     const toggleFAQ = (index) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -35,11 +38,11 @@ const HomePage = () => {
         setSubmitting(true);
 
         try {
-            const res = await axios.post("http://localhost:8000/api/feedback/submit", formData);
-            toast.success("Успешно отправлено!");
+            await axios.post("http://localhost:8000/api/feedback/submit", formData);
+            toast.success(t("homepage.success"));
             setFormData({ name: "", surname: "", phone: "", message: "" });
         } catch (error) {
-            toast.error("Ошибка при отправке. Попробуйте позже.");
+            toast.error(t("homepage.error"));
         } finally {
             setSubmitting(false);
         }
@@ -63,52 +66,42 @@ const HomePage = () => {
     const contentData = [
         {
             image: "/dorm1.png",
-            title: "Общежития",
+            title: t("homepage.dormsTitle"),
             link: "/booking",
-            text: "В Нархоз Университете предоставляются комфортные общежития с современными условиями проживания...",
+            text: t("homepage.dormsText"),
         },
         {
             image: "/sd.jpeg",
-            title: "Запись к Эдвайзеру",
+            title: t("homepage.adviserTitle"),
             link: "/advisor-booking",
-            text: "Записывайся к Эдвайзеру своей Школы, чтобы найти ответ.",
+            text: t("homepage.adviserText"),
         },
         {
             image: "/admed.jpg",
-            title: "Запись к Asmed",
+            title: t("homepage.asmedTitle"),
             link: "/asmed-booking",
-            text: "Записывайся к Asmed.",
-        },
-        {
-            image: "/barber.png",
-            title: "Narxoz Barbershop",
-            link: "/barbershop",
-            text: "Narxoz Barbershop — это стильное и уютное место на территории университета...",
+            text: t("homepage.asmedText"),
         },
         {
             image: "/shop.png",
-            title: "Narxoz Shop",
+            title: t("homepage.shopTitle"),
             link: "/shop",
-            text: "Narxoz Shop — официальный магазин с брендированной продукцией университета...",
+            text: t("homepage.shopText"),
         },
     ];
 
     const faqData = [
         {
-            question: "Университетке түсу үшін қандай талаптар бар?",
-            answer: "Университетке түсу үшін талаптар қатарына ҰБТ нәтижелері...",
+            question: t("homepage.faq1q"),
+            answer: t("homepage.faq1a"),
         },
         {
-            question: "Университет шетелдік студенттерге қандай қолдау көрсетеді?",
-            answer: "Шетелдік студенттер үшін арнайы поддержка қызметтері...",
+            question: t("homepage.faq2q"),
+            answer: t("homepage.faq2a"),
         },
         {
-            question: "Barbershop-қа төлем қалай жүзеге асады?",
-            answer: "Сайтта бронь жасап, қолма-қол төлем жасайсыз.",
-        },
-        {
-            question: "Киім сәйкес келмесе, ауыстыру немесе қайтаруға бола ма?",
-            answer: "Қайтару немесе ауыстыру қарастырылмаған.",
+            question: t("homepage.faq3q"),
+            answer: t("homepage.faq3a"),
         },
     ];
 
@@ -116,7 +109,7 @@ const HomePage = () => {
         <PageWrapper>
             <ToastContainer position="top-right" autoClose={4000} />
             <h1 className="text-3xl font-bold text-[#D50032] mb-10 font-montserrat">
-                Добро пожаловать, {user?.name}
+                {t("homepage.welcome")}, {user?.name}
             </h1>
 
             {/* Слайдер */}
@@ -125,14 +118,14 @@ const HomePage = () => {
                     <Slider {...settings}>
                         {slideImages.map((src, index) => (
                             <div key={index} className="w-full h-[500px]">
-                                <img src={src} alt={`Слайд ${index + 1}`} className="w-full h-full object-cover" />
+                                <img src={src} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" />
                             </div>
                         ))}
                     </Slider>
                 </div>
             </FadeInOnScroll>
 
-            {/* Контент блоки */}
+            {/* Контент */}
             <div className="flex flex-col gap-20 mb-20">
                 {contentData.map((item, index) => (
                     <FadeInOnScroll key={index} delay={index * 0.1}>
@@ -159,7 +152,7 @@ const HomePage = () => {
             {/* FAQ */}
             <FadeInOnScroll>
                 <div className="border-t border-[#D50032] pt-10 mb-16">
-                    <h2 className="text-3xl font-bold text-[#D50032] mb-6">Часто задаваемые вопросы</h2>
+                    <h2 className="text-3xl font-bold text-[#D50032] mb-6">{t("homepage.faq")}</h2>
                     <div className="space-y-4">
                         {faqData.map((faq, index) => (
                             <div key={index} className="border-b py-3">
@@ -190,9 +183,8 @@ const HomePage = () => {
             {/* Карта + форма */}
             <FadeInOnScroll>
                 <div className="mt-20 flex flex-col md:flex-row gap-12 border-t border-gray-300 pt-10">
-                    {/* Карта */}
                     <div className="w-full md:w-1/2">
-                        <h2 className="text-2xl font-bold mb-4">Мы располагаемся здесь</h2>
+                        <h2 className="text-2xl font-bold mb-4">{t("homepage.mapTitle")}</h2>
                         <div className="rounded-2xl overflow-hidden shadow-lg">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2907.7627357037104!2d76.86870497563284!3d43.214465580697095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3883685804a93795%3A0x38849e5598fa1531!2z0J3QsNGA0YXQvtC3!5e0!3m2!1sru!2skz!4v1742840062762!5m2!1sru!2skz"
@@ -201,70 +193,65 @@ const HomePage = () => {
                                 style={{ border: 0 }}
                                 allowFullScreen=""
                                 loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
                             ></iframe>
                         </div>
                     </div>
 
-                    {/* Форма */}
                     <div className="w-full md:w-1/2">
-                        <h2 className="text-2xl font-bold mb-4">Имеются интересующие вопросы?</h2>
+                        <h2 className="text-2xl font-bold mb-4">{t("homepage.formTitle")}</h2>
                         <form className="space-y-4" onSubmit={handleSubmit}>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Имя</label>
+                                <label className="block text-sm font-medium text-gray-700">{t("homepage.name")}</label>
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
                                     required
-                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                    placeholder={t("homepage.namePlaceholder")}
+                                    className="mt-1 block w-full border rounded-xl p-3 shadow-sm"
                                 />
                             </div>
-
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Фамилия</label>
+                                <label className="block text-sm font-medium text-gray-700">{t("homepage.surname")}</label>
                                 <input
                                     type="text"
                                     name="surname"
                                     value={formData.surname}
                                     onChange={handleChange}
                                     required
-                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                    className="mt-1 block w-full border rounded-xl p-3 shadow-sm"
                                 />
                             </div>
-
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Телефон</label>
+                                <label className="block text-sm font-medium text-gray-700">{t("homepage.phone")}</label>
                                 <input
                                     type="tel"
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleChange}
                                     required
-                                    placeholder="+7 (XXX) XXX XXXX"
-                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                    placeholder={t("homepage.phonePlaceholder")}
+                                    className="mt-1 block w-full border rounded-xl p-3 shadow-sm"
                                 />
                             </div>
-
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Повод</label>
+                                <label className="block text-sm font-medium text-gray-700">{t("homepage.reason")}</label>
                                 <textarea
                                     name="message"
                                     value={formData.message}
                                     onChange={handleChange}
                                     rows="3"
                                     required
-                                    className="mt-1 block w-full border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-[#D50032] focus:border-[#D50032] transition"
+                                    className="mt-1 block w-full border rounded-xl p-3 shadow-sm"
                                 ></textarea>
                             </div>
-
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="bg-[#D50032] text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all disabled:opacity-50"
+                                className="bg-[#D50032] text-white px-6 py-3 rounded-xl"
                             >
-                                {submitting ? "Отправка..." : "Отправить"}
+                                {submitting ? t("homepage.submitting") : t("homepage.submit")}
                             </button>
                         </form>
                     </div>

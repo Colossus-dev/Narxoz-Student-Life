@@ -2,9 +2,11 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { FaFileUpload, FaTimes } from "react-icons/fa";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const BookingForm = ({ dormitory, room }) => {
+    const { t } = useTranslation();
     const { user } = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
@@ -57,17 +59,17 @@ const BookingForm = ({ dormitory, room }) => {
                 },
             });
 
-            setSuccess("🎉 Заявка успешно отправлена!");
-            toast.success("🎉 Заявка успешно отправлена!");
+            setSuccess(t("bookingForm.success"));
+            toast.success(t("bookingForm.success"));
             setFormData({ city: "", privileges: "", file: null });
         } catch (err) {
             console.error(err);
             if (err.response && err.response.status === 409) {
-                toast.error("Вы уже подавали заявку на общежитие!!!");
+                toast.error(t("bookingForm.alreadySubmitted"));
             } else {
-                toast.error("❌ Ошибка при отправке заявки. Попробуйте позже.");
+                toast.error(t("bookingForm.error"));
             }
-            setError("Ошибка при отправке.");
+            setError(t("bookingForm.error"));
         } finally {
             setLoading(false);
         }
@@ -75,9 +77,12 @@ const BookingForm = ({ dormitory, room }) => {
 
     return (
         <div className="mt-10 p-6 bg-white rounded-2xl shadow-xl border border-gray-100 transition-all">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Форма бронирования</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                {t("bookingForm.title")}
+            </h2>
             <p className="text-sm text-gray-600 mb-6">
-                <strong>Общежитие:</strong> {dormitory.name}, <strong>Комната:</strong> {room.room_number}
+                <strong>{t("bookingForm.dormitory")}:</strong> {dormitory.name},{" "}
+                <strong>{t("bookingForm.room")}:</strong> {room.room_number}
             </p>
 
             {success && (
@@ -93,35 +98,37 @@ const BookingForm = ({ dormitory, room }) => {
 
             <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Город *</label>
+                    <label className="block text-gray-700 font-semibold mb-1">
+                        {t("bookingForm.city")} *
+                    </label>
                     <input
                         type="text"
                         name="city"
                         value={formData.city}
                         onChange={handleChange}
                         required
-                        placeholder="Например: Алматы"
+                        placeholder={t("bookingForm.cityPlaceholder")}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D50032] focus:outline-none transition"
                     />
                 </div>
 
                 <div>
                     <label className="block text-gray-700 font-semibold mb-1">
-                        Льготы (если есть)
+                        {t("bookingForm.privileges")}
                     </label>
                     <input
                         type="text"
                         name="privileges"
                         value={formData.privileges}
                         onChange={handleChange}
-                        placeholder="Многодетная семья, инвалидность и т.д."
+                        placeholder={t("bookingForm.privilegesPlaceholder")}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D50032] focus:outline-none transition"
                     />
                 </div>
 
                 <div>
                     <label className="block text-gray-700 font-semibold mb-1 flex items-center gap-2">
-                        <FaFileUpload /> Прикрепить документ (PDF/JPG/PNG)
+                        <FaFileUpload /> {t("bookingForm.uploadLabel")}
                     </label>
                     <input
                         type="file"
@@ -136,7 +143,7 @@ const BookingForm = ({ dormitory, room }) => {
                                 type="button"
                                 onClick={removeFile}
                                 className="text-red-500 hover:text-red-700 transition"
-                                title="Удалить файл"
+                                title={t("bookingForm.removeFile")}
                             >
                                 <FaTimes />
                             </button>
@@ -149,7 +156,7 @@ const BookingForm = ({ dormitory, room }) => {
                     disabled={loading}
                     className="w-full bg-[#D50032] text-white py-3 rounded-lg font-bold text-lg shadow-md hover:bg-red-700 transition"
                 >
-                    {loading ? "⏳ Отправка..." : " Отправить заявку"}
+                    {loading ? "⏳ " + t("bookingForm.loading") : t("bookingForm.submit")}
                 </button>
             </form>
         </div>

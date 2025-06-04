@@ -15,8 +15,10 @@ class FeedbackFormResource extends Resource
     protected static ?string $model = FeedbackForm::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
-    protected static ?string $navigationLabel = 'Форма обратной связи';
-    protected static ?string $pluralModelLabel = 'Формы обратной связи';
+
+    protected static ?string $navigationGroup = 'Кері байланыс формасы';
+    protected static ?string $navigationLabel = 'Кері байланыс формасы';
+    protected static ?string $pluralModelLabel = 'Кері байланыс формасы';
     protected static ?string $modelLabel = 'Форма';
 
     public static function form(Form $form): Form

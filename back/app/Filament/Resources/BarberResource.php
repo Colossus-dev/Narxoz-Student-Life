@@ -18,7 +18,10 @@ class BarberResource extends Resource
     protected static ?string $model = Barber::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Барберлер тізімі';
+    protected static ?string $navigationGroup = 'BarberShop';
 
+    protected static ?string $pluralModelLabel = 'Барберлер тізімі';
     public static function form(Form $form): Form
     {
         return $form->schema([

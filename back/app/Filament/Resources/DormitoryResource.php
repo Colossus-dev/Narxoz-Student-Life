@@ -18,8 +18,9 @@ class DormitoryResource extends Resource
 {
     protected static ?string $model = Dormitory::class;
     protected static ?string $navigationIcon = 'heroicon-o-home';
-    protected static ?string $navigationGroup = 'Управление общежитиями'; // ← перевод
-
+    protected static ?string $navigationGroup = 'Жатақхана'; // ← перевод
+    protected static ?string $navigationLabel = 'Жатақханалар';
+    protected static ?string $pluralModelLabel = 'Жатақханалар';
     public static function form(Form $form): Form
     {
         return $form

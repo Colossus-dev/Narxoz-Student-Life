@@ -17,8 +17,9 @@ class RoleResource extends Resource
     protected static ?string $model = Role::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Управление Пользователями';
-
+    protected static ?string $navigationGroup = 'Қолданушыларды Басқару';
+    protected static ?string $navigationLabel = 'Қолданушылар';
+    protected static ?string $pluralModelLabel = 'Қолданушылар';
     public static function form(Form $form): Form
     {
         return $form

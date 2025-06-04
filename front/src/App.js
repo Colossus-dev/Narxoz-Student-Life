@@ -8,7 +8,6 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/Profile";
 import BookingPage from "./pages/Booking";
 import MyBookingsPage from "./pages/MyBookings";
-import Barbershop from "./pages/Barbershop";
 import ShopPage from "./pages/Shop";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
@@ -99,14 +98,6 @@ function App() {
                             }
                         />
                         <Route
-                            path="/barbershop"
-                            element={
-                                <PrivateRoute>
-                                    <Barbershop />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
                             path="/contacts"
                             element={
                                 <PrivateRoute>
@@ -164,6 +155,13 @@ function App() {
                             }
                         />
                     </Routes>
+                    <Route
+                        path="/contacts"
+                        element={
+                            <PrivateRoute>
+                                <AdvisorBookingPage />
+                            </PrivateRoute>
+                        } />
                 </div>
 
                 <AnimatePresence>

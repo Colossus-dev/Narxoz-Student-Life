@@ -19,7 +19,10 @@ class AsmedBookingResource extends Resource
     protected static ?string $model = AsmedBooking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Медицанылық Пункт';
 
+    protected static ?string $navigationLabel = 'Медициналық Пунктке жазылу';
+    protected static ?string $pluralModelLabel = 'Медициналық Пунктке жазылу';
     public static function form(Form $form): Form
     {
         return $form->schema([
