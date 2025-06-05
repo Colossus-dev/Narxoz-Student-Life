@@ -139,7 +139,7 @@ const MyBookings = () => {
             <h1 className="text-4xl font-extrabold text-[#D50032] mb-8">Мои бронирования</h1>
 
             <div className="flex justify-center gap-3 flex-wrap mb-6">
-                {["all", "Общежитие", "Барбершоп", "Эдвайзер", "АСМЕД"].map((type) => (
+                {["all", "Общежитие", "Эдвайзер", "АСМЕД"].map((type) => (
                     <button
                         key={type}
                         onClick={() => setFilter(type)}
@@ -232,8 +232,6 @@ const MyBookings = () => {
                                         <p><strong>Время:</strong> {b.time}</p>
                                         <p><strong>Школа:</strong> {b.school}</p>
                                         <p><strong>Факультет:</strong> {b.faculty}</p>
-                                        <p><strong>Описание:</strong> {b.description}</p>
-                                        <p><strong>Статус:</strong> {b.status}</p>
                                     </>
                                 )}
 

@@ -1,171 +1,328 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { motion, AnimatePresence } from "framer-motion";
 
-const timeSlots = [
-    "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
-    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
-];
+// Time slots: каждые 20 минут, без 13:00–14:00
+const generateTimeSlots = () => {
+    const slots = [];
+    for (let h = 10; h <= 16; h++) {
+        for (let m of [0, 20, 40]) {
+            if (h === 13) continue;
+            if (h === 16 && m > 30) continue;
+            slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+        }
+    }
+    return slots;
+};
+
+const timeSlots = generateTimeSlots();
 
 const schools = {
-    "Школа Цифровых Технологии": ["Digital Engineering", "Digital Management and Design"],
-    "Школа Экономики и Менеджмента": ["Учет и Аудит", "Менеджмент", "Экономика", "Маркетинг"],
-    "Школа права и государственного управления": ["Факультет права", "Государственное управление"],
-    "Гуманитарная школа": [],
-    "Narxoz Business School": [],
+    "Школа Цифровых Технологий": [
+        "Digital Engineering",
+        "Digital Management and Design",
+        "Прикладная математика",
+        "Статистика и наука о данных",
+        "Кибербезопасность",
+    ],
+    "Школа Экономики и Менеджмента": [
+        "Учет и Аудит",
+        "HR и бизнес планирование",
+        "Менеджмент",
+        "Экономика",
+        "Финансы",
+        "Finance risk Management",
+        "Маркетинг",
+    ],
+    "Школа Права и Государственного Управления": [
+        "Юриспруденция",
+        "Международные отношения",
+        "Политические массовые коммуникации",
+        "Государственное и местное управление",
+    ],
+    "Гуманитарная Школа": [
+        "Социология",
+        "Социальная работа",
+        "Психологическое консультирование",
+        "Экология",
+        "Туризм и гостеприимство",
+        "Окружающая среда и устойчивое развитие",
+    ],
 };
 
-const AdvisorBookingPage = () => {
+const reasons = [
+    "Проблема с регистрацией",
+    "Изменение учебного плана",
+    "Перевод, отчисление",
+    "Консультация по предметам",
+    "Другая причина",
+];
+
+const schema = yup.object().shape({
+    date: yup.string().required("Выберите дату"),
+    school: yup.string().required("Выберите школу"),
+    faculty: yup.string().required("Выберите специальность"),
+    time: yup.string().required("Выберите время"),
+    reason: yup.string().required("Укажите причину"),
+    description: yup.string().when("reason", {
+        is: "Другая причина",
+        then: schema => schema.required("Опишите свой вопрос"),
+    }),
+});
+
+export default function AdvisorBookingPage() {
     const navigate = useNavigate();
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState(null);
-    const [school, setSchool] = useState("");
-    const [faculty, setFaculty] = useState("");
-    const [description, setDescription] = useState("");
     const [occupied, setOccupied] = useState([]);
-    const [submitting, setSubmitting] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
+    const [alreadyBooked, setAlreadyBooked] = useState(false);
+
+    const {
+        control,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            date: "",
+            school: "",
+            faculty: "",
+            time: "",
+            reason: "",
+            description: "",
+        },
+        resolver: yupResolver(schema),
+    });
+
+    const watchDate = watch("date");
+    const watchSchool = watch("school");
+    const watchReason = watch("reason");
 
     useEffect(() => {
-        if (!date) return;
+        if (!watchDate) return;
+        axios
+            .get("http://localhost:8000/api/advisor-bookings/occupied", {
+                params: { date: watchDate },
+            })
+            .then((res) => setOccupied(res.data))
+            .catch(() => setOccupied([]));
+    }, [watchDate]);
 
-        axios.get("http://localhost:8000/api/advisor-bookings/occupied", {
-            params: { date },
-        }).then(res => {
-            setOccupied(res.data);
-        }).catch(() => setOccupied([]));
-    }, [date]);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        axios
+            .get("http://localhost:8000/api/advisor-bookings/my", {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            .then((res) => {
+                if (res.data.length > 0) {
+                    setAlreadyBooked(true);
+                }
+            })
+            .catch(() => setAlreadyBooked(false));
+    }, []);
 
-    const handleBooking = () => {
-        if (!school || !faculty || !date || !time || !description) {
-            alert("Пожалуйста, заполните все поля.");
-            return;
-        }
-        setShowConfirm(true);
-    };
-
-    const confirmBooking = async () => {
+    const onSubmit = async (data) => {
         try {
-            setSubmitting(true);
             const token = localStorage.getItem("token");
-
-            await axios.post("http://localhost:8000/api/advisor-bookings", {
-                school,
-                faculty,
-                date,
-                time,
-                description,
-            }, {
+            await axios.post("http://localhost:8000/api/advisor-bookings", data, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             alert("Вы успешно записались к эдвайзеру!");
             navigate("/my-bookings");
-        } catch (error) {
-            console.error("Ошибка:", error);
-            alert("Произошла ошибка. Попробуйте позже.");
-        } finally {
-            setSubmitting(false);
-            setShowConfirm(false);
+        } catch (err) {
+            console.error(err);
+            alert("Ошибка при отправке. Повторите попытку.");
         }
     };
 
-    return (
-        <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-2xl font-bold text-center">Запись к эдвайзеру</h1>
-            <p className="text-center text-gray-500 mb-4">Выберите дату, время и школу</p>
-
-            <label className="block font-semibold mb-1">Дата</label>
-            <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full border rounded px-3 py-2 mb-4"
-            />
-
-            <label className="block font-semibold mb-1">Школа</label>
-            <select
-                value={school}
-                onChange={(e) => {
-                    setSchool(e.target.value);
-                    setFaculty("");
-                }}
-                className="w-full border rounded px-3 py-2 mb-4"
-            >
-                <option value="">Выберите школу</option>
-                {Object.keys(schools).map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                ))}
-            </select>
-
-            <label className="block font-semibold mb-1">Факультет</label>
-            <select
-                value={faculty}
-                onChange={(e) => setFaculty(e.target.value)}
-                disabled={!school}
-                className="w-full border rounded px-3 py-2 mb-4"
-            >
-                <option value="">Выберите факультет</option>
-                {schools[school]?.map((f) => (
-                    <option key={f} value={f}>{f}</option>
-                ))}
-            </select>
-
-            <label className="block font-semibold mb-1">Время</label>
-            <div className="grid grid-cols-4 gap-2 mb-4">
-                {timeSlots.map((slot) => (
-                    <button
-                        key={slot}
-                        disabled={occupied.includes(slot)}
-                        onClick={() => setTime(slot)}
-                        className={`px-3 py-1 rounded ${
-                            time === slot ? "bg-red-600 text-white" : "bg-gray-200"
-                        } ${occupied.includes(slot) ? "opacity-50 cursor-not-allowed" : ""}`}
-                    >
-                        {slot}
-                    </button>
-                ))}
+    if (alreadyBooked) {
+        return (
+            <div className="max-w-xl mx-auto p-6 mt-10 bg-white rounded-xl shadow">
+                <h1 className="text-2xl font-bold text-center mb-4">Запись к эдвайзеру</h1>
+                <p className="text-center text-red-600 text-lg">
+                    Вы уже записались к эдвайзеру. Повторная запись невозможна.
+                </p>
             </div>
+        );
+    }
 
-            <label className="block font-semibold mb-1">Описание вопроса</label>
-            <textarea
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full border rounded px-3 py-2 mb-6"
-                placeholder="Кратко опишите суть вопроса"
-            />
+    return (
+        <div className="max-w-xl mx-auto p-6 bg-white shadow-xl rounded-2xl mt-10 transition-all">
+            <h1 className="text-3xl font-bold text-center mb-4">Запись к эдвайзеру</h1>
 
-            <button
-                onClick={handleBooking}
-                disabled={submitting}
-                className="w-full bg-red-600 text-white py-2 rounded-lg"
-            >
-                {submitting ? "Отправка..." : "Записаться"}
-            </button>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                {/* Дата */}
+                <Controller
+                    name="date"
+                    control={control}
+                    render={({ field }) => (
+                        <>
+                            <label>Дата</label>
+                            <input type="date" {...field} className="input-style" />
+                            {errors.date && <p className="error">{errors.date.message}</p>}
+                        </>
+                    )}
+                />
 
-            {showConfirm && (
-                <div className="mt-4 bg-gray-100 p-4 rounded-lg text-center">
-                    <p className="font-semibold mb-2">Подтвердить запись?</p>
-                    <p>{date} | {time} | {school} - {faculty}</p>
-                    <div className="mt-3 flex justify-center gap-4">
-                        <button
-                            onClick={confirmBooking}
-                            className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                {/* Школа */}
+                <Controller
+                    name="school"
+                    control={control}
+                    render={({ field }) => (
+                        <>
+                            <label>Школа</label>
+                            <select
+                                {...field}
+                                className="input-style"
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    setValue("faculty", "");
+                                }}
+                            >
+                                <option value="">Выберите школу</option>
+                                {Object.keys(schools).map((key) => (
+                                    <option key={key} value={key}>
+                                        {key}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.school && <p className="error">{errors.school.message}</p>}
+                        </>
+                    )}
+                />
+
+                {/* Специальность */}
+                <Controller
+                    name="faculty"
+                    control={control}
+                    render={({ field }) => (
+                        <>
+                            <label>Специальность</label>
+                            <select {...field} className="input-style" disabled={!watchSchool}>
+                                <option value="">Выберите специальность</option>
+                                {schools[watchSchool]?.map((f) => (
+                                    <option key={f} value={f}>
+                                        {f}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.faculty && <p className="error">{errors.faculty.message}</p>}
+                        </>
+                    )}
+                />
+
+                {/* Время */}
+                <Controller
+                    name="time"
+                    control={control}
+                    render={({ field }) => (
+                        <>
+                            <label>Время</label>
+                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                {timeSlots.map((slot) => (
+                                    <button
+                                        type="button"
+                                        key={slot}
+                                        onClick={() => field.onChange(slot)}
+                                        disabled={occupied.includes(slot)}
+                                        className={`px-3 py-1 rounded text-sm transition ${
+                                            field.value === slot
+                                                ? "bg-red-600 text-white"
+                                                : "bg-gray-200"
+                                        } ${occupied.includes(slot) ? "opacity-50" : "hover:bg-red-100"}`}
+                                    >
+                                        {slot}
+                                    </button>
+                                ))}
+                            </div>
+                            {errors.time && <p className="error">{errors.time.message}</p>}
+                        </>
+                    )}
+                />
+
+                {/* Причина */}
+                <Controller
+                    name="reason"
+                    control={control}
+                    render={({ field }) => (
+                        <>
+                            <label>Причина</label>
+                            <select {...field} className="input-style">
+                                <option value="">Выберите причину</option>
+                                {reasons.map((r) => (
+                                    <option key={r} value={r}>
+                                        {r}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.reason && <p className="error">{errors.reason.message}</p>}
+                        </>
+                    )}
+                />
+
+                {/* Описание (если выбрана "другая причина") */}
+                <AnimatePresence>
+                    {watchReason === "Другая причина" && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
                         >
-                            Да
-                        </button>
-                        <button
-                            onClick={() => setShowConfirm(false)}
-                            className="bg-gray-400 text-white px-4 py-2 rounded-lg"
-                        >
-                            Нет
-                        </button>
-                    </div>
-                </div>
-            )}
+                            <Controller
+                                name="description"
+                                control={control}
+                                render={({ field }) => (
+                                    <>
+                                        <label>Описание</label>
+                                        <textarea
+                                            {...field}
+                                            rows={4}
+                                            className="input-style"
+                                            placeholder="Опишите ваш вопрос"
+                                        />
+                                        {errors.description && <p className="error">{errors.description.message}</p>}
+                                    </>
+                                )}
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <button
+                    type="submit"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-lg transition"
+                >
+                    Записаться
+                </button>
+            </form>
         </div>
     );
-};
+}
 
-export default AdvisorBookingPage;
+// Tailwind helper styles
+const style = document.createElement("style");
+style.innerHTML = `
+  .input-style {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 10px;
+    outline: none;
+    transition: border 0.2s;
+  }
+  .input-style:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
+  .error {
+    color: #e11d48;
+    font-size: 0.875rem;
+    margin-top: 2px;
+  }
+`;
+document.head.appendChild(style);

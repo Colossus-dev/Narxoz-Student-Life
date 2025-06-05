@@ -24,11 +24,11 @@
     "shopTitle": "Narxoz Shop",
     "shopText": "Narxoz Shop is the official store with university-branded merchandise.",
     "faq1q": "What are the requirements to enter the university?",
-    "faq1a": "Requirements include UNT scores and general admission documents...",
+    "faq1a": "To enter the university, applicants must successfully pass the Unified National Testing (UNT). Depending on the program, additional creative exams or interviews may be required. Required documents typically include a high school diploma, ID, medical certificate, photos, and — if applicable — documents proving social status.",
     "faq2q": "What support is provided for international students?",
-    "faq2a": "There are dedicated services for international students at Narxoz.",
+    "faq2a": "International students receive support such as visa assistance, dormitory placement, language courses, academic advising, and cultural integration programs. The international department offers comprehensive help for all student needs.",
     "faq3q": "Can I exchange or return clothing if it doesn't fit?",
-    "faq3a": "Returns or exchanges are not available."
+    "faq3a": "At this time, returns or exchanges for clothing are not available. It is recommended to carefully check the size and description before purchasing."
   },
   "header": {
     "home": "Home",
@@ -157,7 +157,29 @@
     "title": "Thank you for your order!",
     "message": "Your order has been successfully placed. Payment is due upon pickup.\nYou can collect it at our campus store.",
     "back_to_shop": "Back to shop"
+  },
+  "bookingForms": {
+    "title": "Booking Form",
+    "message": "Before submitting the request, please select your city and (if applicable) any privileges. You may need to attach a document.",
+    "dormitory": "Dormitory",
+    "room": "Room",
+    "fields": {
+      "city": "City",
+      "cityPlaceholder": "Select your city",
+      "privileges": "Privilege",
+      "privilegesPlaceholder": "Select a privilege (if applicable)",
+      "uploadLabel": "Attach document",
+      "removeFile": "Remove file"
+    },
+    "buttons": {
+      "submit": "Submit Application",
+      "loading": "Submitting..."
+    },
+    "alerts": {
+      "success": "Your application has been submitted successfully!",
+      "error": "An error occurred. Please try again.",
+      "alreadySubmitted": "You have already submitted a request for this room."
+    }
   }
-
 
 }
