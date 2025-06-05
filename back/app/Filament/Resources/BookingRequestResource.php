@@ -19,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
+use Illuminate\Support\Facades\Storage;
 
 class BookingRequestResource extends Resource
 {
@@ -54,19 +55,30 @@ class BookingRequestResource extends Resource
 
                 Select::make('privileges')
                     ->label('Льготы')
-                    ->options([
-                        'large_family' => 'Многодетная семья',
-                        'orphan' => 'Сирота',
-                        'disabled' => 'Инвалидность',
-                    ])
+                    ->options(function () {
+                        return BookingRequest::query()
+                            ->distinct()
+                            ->pluck('privileges', 'privileges')
+                            ->filter(); // удалит null
+                    })
                     ->nullable(),
 
                 FileUpload::make('attached_files')
                     ->label('Прикреплённые файлы')
-                    ->multiple()
+                    ->disk('public')
+                    ->directory('privileges') // ← путь к папке
+                    ->multiple() // ← так как поле json
+                    ->enableDownload()
+                    ->enableOpen()
+                    ->downloadable()
+                    ->dehydrated() // важно для сохранения при редактировании
+                    ->reorderable()
+                    ->preserveFilenames()
+                    ->helperText('Файлы: JPG, PNG, PDF. До 2MB')
                     ->nullable(),
 
-                Select::make('status')
+
+        Select::make('status')
                     ->label('Статус заявки')
                     ->options([
                         'pending' => 'В ожидании',

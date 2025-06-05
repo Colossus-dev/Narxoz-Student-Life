@@ -15,7 +15,7 @@ class BookingRequestController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'city' => 'required|string',
             'privileges' => 'nullable|string',
-            'attached_file' => 'nullable|file|max:5120|mimes:pdf,jpg,jpeg,png',
+            'attached_files' => 'nullable',
         ]);
 
         // Проверка: есть ли уже заявка от пользователя
@@ -29,8 +29,8 @@ class BookingRequestController extends Controller
 
         $filePath = null;
 
-        if ($request->hasFile('attached_file')) {
-            $filePath = $request->file('attached_file')->store('privileges', 'public');
+        if ($request->hasFile('attached_files')) {
+            $filePath = $request->file('attached_files')->store('privileges', 'public');
         }
 
         $booking = BookingRequest::create([

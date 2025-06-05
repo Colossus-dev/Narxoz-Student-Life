@@ -9,7 +9,7 @@ class RoomSeeder extends Seeder
 {
     public function run(): void
     {
-        $dormitoryIds = [1, 2, 3];
+        $dormitoryIds = [1, 2, 3, 4];
 
         foreach ($dormitoryIds as $dormitoryId) {
             for ($floor = 1; $floor <= 5; $floor++) {
@@ -22,7 +22,7 @@ class RoomSeeder extends Seeder
                         'floor' => $floor,
                         'capacity' => rand(2, 3),
                         'reserve_status' => rand(0, 1), // 1 - резерв, 0 - обычный
-                        'price' => $dormitoryId === 1 ? 74000 : 46000,
+                        'price' => $dormitoryId === 1 ? 80000 : 46000,
                     ]);
                 }
             }

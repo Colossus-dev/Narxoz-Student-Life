@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AdvisorBookingResource\Pages;
 use App\Models\AdvisorBooking;
+use App\Models\BookingRequest;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -64,7 +66,8 @@ class AdvisorBookingResource extends Resource
                 ->label('Описание проблемы')
                 ->rows(4)
                 ->placeholder('Кратко опишите суть вопроса, чтобы эдвайзер был готов')
-                ->required(),
+                ->required()
+                ->nullable(),
 
             Forms\Components\DatePicker::make('date')
                 ->label('Дата')
@@ -73,6 +76,18 @@ class AdvisorBookingResource extends Resource
             Forms\Components\TextInput::make('time')
                 ->label('Время')
                 ->required(),
+
+            Select::make('reason')
+                ->label('Причина обращения')
+                ->options(fn () =>
+                \App\Models\AdvisorBooking::query()
+                    ->whereNotNull('reason')
+                    ->distinct()
+                    ->pluck('reason', 'reason')
+                )
+                ->nullable()
+                ->searchable(),
+
 
             Forms\Components\Select::make('status')
                 ->label('Статус')
