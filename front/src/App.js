@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -11,24 +11,24 @@ import MyBookingsPage from "./pages/MyBookings";
 import ShopPage from "./pages/Shop";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
-import { ToastContainer } from 'react-toastify';
-
-import PrivateRoute from "./components/PrivateRoute";
-import { useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import Contacts from "./pages/Contacts";
 import OrderSuccess from "./pages/OrderSuccess";
 import AdvisorBookingPage from "./pages/AdvisorBookingPage";
-import AsmedBookingPage from "./pages/AsmedBookingPage"; // путь может отличаться
-
+import AsmedBookingPage from "./pages/AsmedBookingPage";
+import PrivateRoute from "./components/PrivateRoute";
+import { AnimatePresence, motion } from "framer-motion";
+import { ToastContainer } from "react-toastify";
+import AdviserMainPage from "./pages/ AdviserMainPage";
 
 const theme = createTheme({
     typography: {
         fontFamily: "'Montserrat', Arial, sans-serif",
     },
 });
+
+
 function App() {
-    const location = useLocation(); // 👈 определяем текущий путь
+    const location = useLocation();
     const isAuthPage = location.pathname === "/login";
 
     const [cart, setCart] = useState([]);
@@ -41,6 +41,7 @@ function App() {
         const updatedCart = cart.filter((_, i) => i !== index);
         setCart(updatedCart);
     };
+
     const clearCart = () => {
         setCart([]);
     };
@@ -65,103 +66,19 @@ function App() {
                 <div className="flex-1">
                     <Routes location={location} key={location.pathname}>
                         <Route path="/login" element={<LoginPage />} />
-                        <Route
-                            path="/"
-                            element={
-                                <PrivateRoute>
-                                    <HomePage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/profile"
-                            element={
-                                <PrivateRoute>
-                                    <ProfilePage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/booking"
-                            element={
-                                <PrivateRoute>
-                                    <BookingPage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/my-bookings"
-                            element={
-                                <PrivateRoute>
-                                    <MyBookingsPage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/contacts"
-                            element={
-                                <PrivateRoute>
-                                    <Contacts />
-                                </PrivateRoute>
-                        } />
-
-                        <Route
-                            path="/shop"
-                            element={
-                                <PrivateRoute>
-                                    <ShopPage cart={cart} />
-                                </PrivateRoute>
-                            }
-                        />
-                        />
-                        <Route
-                            path="/shop/:id"
-                            element={
-                                <PrivateRoute>
-                                    <ProductPage addToCart={addToCart} />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/cart"
-                            element={
-                                <PrivateRoute>
-                                    <Cart cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/order-success"
-                            element={
-                                <PrivateRoute>
-                                    <OrderSuccess />
-                                </PrivateRoute>
-                            }
-                            />
-                        <Route
-                            path="/advisor-booking"
-                            element={
-                                <PrivateRoute>
-                                    <AdvisorBookingPage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/asmed-booking"
-                            element={
-                                <PrivateRoute>
-                                    <AsmedBookingPage />
-                                </PrivateRoute>
-                            }
-                        />
+                        <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+                        <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+                        <Route path="/booking" element={<PrivateRoute><BookingPage /></PrivateRoute>} />
+                        <Route path="/my-bookings" element={<PrivateRoute><MyBookingsPage /></PrivateRoute>} />
+                        <Route path="/contacts" element={<PrivateRoute><Contacts /></PrivateRoute>} />
+                        <Route path="/shop" element={<PrivateRoute><ShopPage cart={cart} /></PrivateRoute>} />
+                        <Route path="/shop/:id" element={<PrivateRoute><ProductPage addToCart={addToCart} /></PrivateRoute>} />
+                        <Route path="/cart" element={<PrivateRoute><Cart cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} /></PrivateRoute>} />
+                        <Route path="/order-success" element={<PrivateRoute><OrderSuccess /></PrivateRoute>} />
+                        <Route path="/advisor" element={<PrivateRoute><AdviserMainPage /></PrivateRoute>} />
+                        <Route path="/advisor-booking" element={<PrivateRoute><AdvisorBookingPage /></PrivateRoute>} />
+                        <Route path="/asmed-booking" element={<PrivateRoute><AsmedBookingPage /></PrivateRoute>} />
                     </Routes>
-                    <Route
-                        path="/contacts"
-                        element={
-                            <PrivateRoute>
-                                <AdvisorBookingPage />
-                            </PrivateRoute>
-                        } />
                 </div>
 
                 <AnimatePresence>
@@ -179,12 +96,9 @@ function App() {
                 </AnimatePresence>
             </div>
             <ToastContainer position="top-center" />
-
         </ThemeProvider>
-
     );
 }
-
 
 function AppWithRouter() {
     return (

@@ -73,7 +73,7 @@ const HomePage = () => {
         {
             image: "/sd.jpeg",
             title: t("homepage.adviserTitle"),
-            link: "/advisor-booking",
+            link: "/advisor",
             text: t("homepage.adviserText"),
         },
         {

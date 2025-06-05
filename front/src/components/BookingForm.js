@@ -12,7 +12,7 @@ const BookingForm = ({ dormitory, room }) => {
     const [formData, setFormData] = useState({
         city: "",
         privileges: "",
-        file: null,
+        attached_files: null,
     });
 
     const [loading, setLoading] = useState(false);
@@ -26,11 +26,11 @@ const BookingForm = ({ dormitory, room }) => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setFormData({ ...formData, file });
+        setFormData({ ...formData, attached_files: file });
     };
 
     const removeFile = () => {
-        setFormData({ ...formData, file: null });
+        setFormData({ ...formData, attached_files: null });
     };
 
     const handleSubmit = async (e) => {
@@ -47,8 +47,8 @@ const BookingForm = ({ dormitory, room }) => {
             form.append("room_id", room.id);
             form.append("city", formData.city);
             form.append("privileges", formData.privileges);
-            if (formData.file) {
-                form.append("attached_files", formData.file);
+            if (formData.privileges && formData.privileges !== "Басқа" && formData.attached_files) {
+                form.append("attached_files", formData.attached_files);
             }
 
             await axios.post("http://localhost:8000/api/booking-requests", form, {
@@ -61,19 +61,34 @@ const BookingForm = ({ dormitory, room }) => {
 
             setSuccess(t("bookingForm.success"));
             toast.success(t("bookingForm.success"));
-            setFormData({ city: "", privileges: "", file: null });
+            setFormData({ city: "", privileges: "", attached_files: null });
         } catch (err) {
             console.error(err);
             if (err.response && err.response.status === 409) {
-                toast.error(t("bookingForm.alreadySubmitted"));
+                toast.error(t("bookingForm.alerts.alreadySubmitted"));
             } else {
-                toast.error(t("bookingForm.error"));
+                toast.error(t("bookingForm.alerts.error"));
             }
-            setError(t("bookingForm.error"));
+            setError(t("bookingForm.alerts.error"));
         } finally {
             setLoading(false);
         }
     };
+
+    const groupedCities = {
+        "Алматы облысы": ["Алматы", "Қонаев", "Талғар", "Текелі", "Талдықорған", "Ұштөбе", "Үшарал"],
+        "Астана / Ақмола": ["Астана", "Көкшетау", "Щучинск", "Степногорск", "Ерейментау", "Есіл", "Макинск"],
+        "Шымкент / Түркістан": ["Шымкент", "Түркістан", "Сарыағаш", "Кентау", "Арыс", "Жетісай", "Шардара"],
+        "Қарағанды облысы": ["Қарағанды", "Теміртау", "Сарань", "Балқаш", "Шахтинск", "Жезқазған"],
+        "Басқа қалалар": [
+            "Ақтау", "Ақтөбе", "Орал", "Өскемен", "Павлодар", "Семей", "Қызылорда", "Қостанай",
+            "Рудный", "Тараз", "Атырау", "Экибастуз", "Қаскелең", "Абай", "Форт-Шевченко", "Құлсары"
+        ],
+    };
+
+    const privilegesOptions = [
+        "Жетім", "Мүгедек", "Көпбалалы отбасы", "Әлеуметтік жағдайы төмен", "Нет"
+    ];
 
     return (
         <div className="mt-10 p-6 bg-white rounded-2xl shadow-xl border border-gray-100 transition-all">
@@ -97,64 +112,78 @@ const BookingForm = ({ dormitory, room }) => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
+                {/* City Dropdown */}
                 <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
+                    <label className="block text-gray-700 font-semibold mb-2">
                         {t("bookingForm.city")} *
                     </label>
-                    <input
-                        type="text"
+                    <select
                         name="city"
                         value={formData.city}
                         onChange={handleChange}
                         required
-                        placeholder={t("bookingForm.cityPlaceholder")}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D50032] focus:outline-none transition"
-                    />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D50032] transition duration-300"
+                    >
+                        {Object.entries(groupedCities).map(([region, cities]) => (
+                            <optgroup key={region} label={region}>
+                                {cities.map((city) => (
+                                    <option key={city} value={city}>{city}</option>
+                                ))}
+                            </optgroup>
+                        ))}
+                    </select>
                 </div>
 
+                {/* Privileges Dropdown */}
                 <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
+                    <label className="block text-gray-700 font-semibold mb-2">
                         {t("bookingForm.privileges")}
                     </label>
-                    <input
-                        type="text"
+                    <select
                         name="privileges"
                         value={formData.privileges}
                         onChange={handleChange}
-                        placeholder={t("bookingForm.privilegesPlaceholder")}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D50032] focus:outline-none transition"
-                    />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D50032] transition duration-300"
+                    >
+                        {privilegesOptions.map((option) => (
+                            <option key={option} value={option}>{option}</option>
+                        ))}
+                    </select>
                 </div>
 
-                <div>
-                    <label className="block text-gray-700 font-semibold mb-1 flex items-center gap-2">
-                        <FaFileUpload /> {t("bookingForm.uploadLabel")}
-                    </label>
-                    <input
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        onChange={handleFileChange}
-                        className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-[#D50032] file:text-white hover:file:bg-red-700 transition"
-                    />
-                    {formData.file && (
-                        <div className="mt-2 flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md shadow-sm">
-                            <span className="text-sm text-gray-700 truncate">{formData.file.name}</span>
-                            <button
-                                type="button"
-                                onClick={removeFile}
-                                className="text-red-500 hover:text-red-700 transition"
-                                title={t("bookingForm.removeFile")}
-                            >
-                                <FaTimes />
-                            </button>
-                        </div>
-                    )}
-                </div>
+                {/* File Upload — only if privilege is selected AND not "Басқа" */}
+                {formData.privileges && formData.privileges !== "Нет" && (
+                    <div>
+                        <label className="block text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                            <FaFileUpload /> {t("bookingForm.uploadLabel")}
+                        </label>
+                        <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-[#D50032] file:text-white hover:file:bg-red-700 transition duration-300"
+                            required
+                        />
+                        {formData.attached_files && (
+                            <div className="mt-2 flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md shadow-sm">
+                                <span className="text-sm text-gray-700 truncate">{formData.attached_files.name}</span>
+                                <button
+                                    type="button"
+                                    onClick={removeFile}
+                                    className="text-red-500 hover:text-red-700 transition"
+                                    title={t("bookingForm.removeFile")}
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#D50032] text-white py-3 rounded-lg font-bold text-lg shadow-md hover:bg-red-700 transition"
+                    className="w-full bg-[#D50032] text-white py-3 rounded-xl font-bold text-lg shadow-md hover:bg-red-700 transition duration-300"
                 >
                     {loading ? "⏳ " + t("bookingForm.loading") : t("bookingForm.submit")}
                 </button>

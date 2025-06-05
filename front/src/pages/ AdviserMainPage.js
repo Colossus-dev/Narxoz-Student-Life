@@ -1,5 +1,6 @@
 import React from "react";
-import { MdPerson, MdSupervisorAccount } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { FiInfo } from "react-icons/fi";
 
 const advisersData = [
     {
@@ -11,18 +12,20 @@ const advisersData = [
             "Фронт карты"
         ],
         managers: ["Идрисова Жансулу", "Құсайын Мардан"],
-        office: "A корпус, 101 кабинет",
-        contact: "frontoffice@narxoz.kz",
-        workTime: "Пн–Пт, 09:00–18:00"
+        facultyLogo: "/faculty/front.png"
     },
     {
         window: "№ 3",
         title: "Менеджер LMS Canvas Narxoz",
         responsibilities: ["Миграция оценок", "Вопросы по Canvas"],
         managers: ["Нурланов Ильясхан"],
-        office: "A корпус, 102 кабинет",
-        contact: "canvas@narxoz.kz",
-        workTime: "Пн–Пт, 09:00–17:30"
+        facultyLogo: "/faculty/front.png"
+    },
+    {
+        window: "№ 7",
+        title: "Менеджер по финансовым и социальным вопросам",
+        managers: ["Аймаханова Куралай"],
+        facultyLogo: "/faculty/front.png"
     },
     {
         window: "№ 5",
@@ -35,9 +38,7 @@ const advisersData = [
             "Статистика и наука о данных",
             "Социология"
         ],
-        office: "B корпус, 205 кабинет",
-        contact: "dean5@narxoz.kz",
-        workTime: "Пн–Пт, 10:00–17:00"
+        facultyLogo: "/faculty/digital.png"
     },
     {
         window: "№ 6",
@@ -51,17 +52,7 @@ const advisersData = [
             "Менеджмент",
             "Экономика"
         ],
-        office: "B корпус, 206 кабинет",
-        contact: "adviser6@narxoz.kz",
-        workTime: "Пн–Пт, 10:00–17:00"
-    },
-    {
-        window: "№ 7",
-        title: "Менеджер по финансовым и социальным вопросам",
-        managers: ["Аймаханова Куралай"],
-        office: "A корпус, 103 кабинет",
-        contact: "finance@narxoz.kz",
-        workTime: "Пн–Пт, 09:00–18:00"
+        facultyLogo: "/faculty/economics.png"
     },
     {
         window: "№ 8",
@@ -73,9 +64,7 @@ const advisersData = [
             "Finance Risk Management",
             "Маркетинг"
         ],
-        office: "B корпус, 208 кабинет",
-        contact: "adviser8@narxoz.kz",
-        workTime: "Пн–Пт, 10:00–17:00"
+        facultyLogo: "/faculty/marketing.png"
     },
     {
         window: "№ 9",
@@ -92,94 +81,100 @@ const advisersData = [
             "Международная и сравнительная политология",
             "Окружающая среда и устойчивое развитие"
         ],
-        office: "B корпус, 209 кабинет",
-        contact: "adviser9@narxoz.kz",
-        workTime: "Пн–Пт, 10:00–17:00"
+        facultyLogo: "/faculty/law.png"
     }
 ];
 
 const AdviserMainPage = () => {
     return (
-        <div className="max-w-7xl mx-auto p-6">
-            <h1 className="text-3xl font-bold text-center mb-8">Служба эдвайзеров</h1>
-
-            <div className="mb-12 text-lg leading-relaxed text-gray-700 bg-blue-50 p-6 rounded-lg shadow">
-                <p>
-                    Эдвайзеры помогают студентам с вопросами, связанными с учебным процессом, переводом, академическим отпуском, восстановлением, выбором предметов и составлением индивидуального учебного плана. Они — первые, к кому обращаются студенты при возникновении трудностей или неясностей.
+        <div className="max-w-7xl mx-auto px-6 py-12 font-nunito text-[16px] text-neutral-700 antialiased tracking-tight">
+            {/* Информационная карточка */}
+            <div className="bg-gradient-to-r from-pink-100 to-blue-100 rounded-3xl p-8 shadow-lg mb-12">
+                <div className="flex items-center mb-4">
+                    <FiInfo className="text-3xl text-[#D50032] mr-3" />
+                    <h2 className="text-3xl font-bold text-gray-800">
+                        Эдвайзерлік қызмет туралы
+                    </h2>
+                </div>
+                <p className="leading-relaxed font-normal">
+                    Эдвайзеры помогают студентам с вопросами по учебе, отпускам, восстановлению,
+                    выбору дисциплин и составлению ИУП. Если вы не знаете, к кому обратиться — начните с эдвайзера.
                 </p>
-                <p className="mt-4">
-                    Частые проблемы: студенты не проверяют почту или платформу, из-за чего пропускают важные уведомления. Мы рекомендуем регулярно следить за новостями и напоминаниями от эдвайзеров.
+                <p className="mt-4 leading-relaxed font-normal">
+                    Многие студенты не читают почту и пропускают важные уведомления. Регулярно проверяйте платформу!
                 </p>
+                {/* Общая кнопка */}
+                <div className="mt-12 text-center">
+                    <Link
+                        to="/advisor-booking"
+                        className="inline-block bg-gradient-to-r from-[#D50032] to-pink-600 text-white text-lg font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                        📅 Записаться к эдвайзеру
+                    </Link>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Карточки эдвайзеров */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {advisersData.map((entry, index) => (
-                    <div key={index} className="bg-white shadow-lg rounded-lg p-5 border border-gray-200">
-                        <h2 className="text-xl font-semibold text-red-600 mb-1">Окно {entry.window}</h2>
-                        <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
-                            {entry.title.includes("Менеджер") ? (
-                                <MdSupervisorAccount className="text-gray-500" />
-                            ) : (
-                                <MdPerson className="text-gray-500" />
+                    <div
+                        key={index}
+                        className="relative bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 min-h-[420px] p-6 flex flex-col justify-between"
+                    >
+                        {/* Уменьшенное фоновое фото */}
+                        {entry.facultyLogo && (
+                            <img
+                                src={entry.facultyLogo}
+                                alt="Faculty Background"
+                                className="absolute inset-0 m-auto opacity-10 w-100 h-100 object-contain pointer-events-none select-none"
+                                style={{ zIndex: 0 }}
+                            />
+                        )}
+
+                        {/* Контент */}
+                        <div className="relative z-10">
+                            <h3 className="text-xl font-bold text-[#D50032] mb-3">
+                                {entry.window} — {entry.title}
+                            </h3>
+
+                            {entry.managers && (
+                                <p className="mb-2 font-normal">
+                                    <strong>Менеджеры:</strong> {entry.managers.join(", ")}
+                                </p>
                             )}
-                            {entry.title}
-                        </h3>
 
-                        {entry.managers && (
-                            <p className="text-gray-700 mb-1">Менеджеры: {entry.managers.join(", ")}</p>
-                        )}
-                        {entry.advisers && (
-                            <p className="text-gray-700 mb-1">Эдвайзеры: {entry.advisers.join(", ")}</p>
-                        )}
+                            {entry.advisers && (
+                                <p className="mb-2 font-normal">
+                                    <strong>Эдвайзеры:</strong> {entry.advisers.join(", ")}
+                                </p>
+                            )}
 
-                        {entry.office && (
-                            <p className="text-gray-600">Кабинет: {entry.office}</p>
-                        )}
-                        {entry.workTime && (
-                            <p className="text-gray-600">График: {entry.workTime}</p>
-                        )}
-                        {entry.contact && (
-                            <p className="text-gray-600 mb-2">Email: {entry.contact}</p>
-                        )}
+                            {entry.responsibilities && (
+                                <>
+                                    <p className="font-semibold mb-1">Обязанности:</p>
+                                    <ul className="list-disc ml-5 mb-2">
+                                        {entry.responsibilities.map((r, i) => (
+                                            <li key={i} className="font-normal">{r}</li>
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
 
-                        {entry.responsibilities && (
-                            <ul className="list-disc ml-5 text-gray-700 mb-2">
-                                {entry.responsibilities.map((r, i) => (
-                                    <li key={i}>{r}</li>
-                                ))}
-                            </ul>
-                        )}
-                        {entry.specialties && (
-                            <>
-                                <p className="mt-2 font-semibold">Специальности:</p>
-                                <ul className="list-disc ml-5 text-gray-700">
-                                    {entry.specialties.map((s, i) => (
-                                        <li key={i}>{s}</li>
-                                    ))}
-                                </ul>
-                            </>
-                        )}
+                            {entry.specialties && (
+                                <>
+                                    <p className="font-semibold mb-1">Специальности:</p>
+                                    <ul className="list-disc ml-5">
+                                        {entry.specialties.map((s, i) => (
+                                            <li key={i} className="font-normal">{s}</li>
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
 
-            {/* FAQ Section */}
-            <div className="mt-16 bg-yellow-50 p-6 rounded-lg shadow">
-                <h2 className="text-2xl font-bold text-center text-yellow-800 mb-4">Часто задаваемые вопросы</h2>
-                <ul className="list-disc text-gray-700 ml-6 space-y-2">
-                    <li>Как подать заявление на академический отпуск?</li>
-                    <li>Кто помогает с восстановлением после отчисления?</li>
-                    <li>Где получить справку для военкомата?</li>
-                    <li>К кому обращаться по вопросам Canvas LMS?</li>
-                </ul>
-            </div>
-
-            {/* Call to Action */}
-            <div className="mt-10 text-center bg-green-50 p-4 rounded-lg shadow">
-                <p className="text-lg font-semibold text-green-800">
-                    Возникли вопросы? Обратитесь к своему эдвайзеру лично или напишите на корпоративную почту!
-                </p>
-            </div>
         </div>
     );
 };
