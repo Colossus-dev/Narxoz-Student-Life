@@ -13,7 +13,7 @@ class BookingRequest extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'room_id', 'city', 'privileges', 'attached_files', 'status','payment_status', 'contract_signed', 'payment_qr_url'];
+    protected $fillable = ['user_id', 'room_id', 'city', 'privileges', 'attached_files', 'status','payment_status', 'contract_signed',];
 
     protected $casts = [
         'attached_files' => 'array',
