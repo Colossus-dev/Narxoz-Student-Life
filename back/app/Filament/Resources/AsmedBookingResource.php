@@ -30,6 +30,9 @@ class AsmedBookingResource extends Resource
                 ->relationship('user', 'name')
                 ->required(),
 
+            Forms\Components\TextInput::make('iin')
+                ->required(),
+
             Forms\Components\DatePicker::make('date')
                 ->required(),
 
@@ -45,15 +48,17 @@ class AsmedBookingResource extends Resource
     {
         return $table->columns([
             TextColumn::make('user.name')->label('Студент')->sortable()->searchable(),
-            TextColumn::make('date')->sortable(),
-            TextColumn::make('time'),
-            TextColumn::make('reason')->limit(50)->tooltip(fn ($record) => $record->reason),
+            TextColumn::make('iin')->label('ЖСН'),
+            TextColumn::make('date')->label('Күні')->sortable(),
+            TextColumn::make('time')->label('Уақыты')->sortable(),
+            TextColumn::make('reason')->label('Себеп')->limit(50)->tooltip(fn ($record) => $record->reason),
         ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

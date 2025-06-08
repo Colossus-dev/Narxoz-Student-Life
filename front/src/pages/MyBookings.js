@@ -3,9 +3,6 @@ import { motion } from "framer-motion";
 import {
     FaHome,
     FaUser,
-    FaFileAlt,
-    FaTrash,
-    FaCut,
     FaCheckCircle,
     FaHeartbeat,
 } from "react-icons/fa";
@@ -13,6 +10,7 @@ import api from "../utils/api";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import PaymentModal from "../components/PaymentModal";
+import { useTranslation } from "react-i18next";
 
 const MyBookings = () => {
     const { user } = useContext(AuthContext);
@@ -21,6 +19,7 @@ const MyBookings = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedBookingId, setSelectedBookingId] = useState(null);
     const [filter, setFilter] = useState("all");
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,13 +32,10 @@ const MyBookings = () => {
                     api.get("/asmed/my", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
                 ]);
 
-
                 const dormBookings = dormRes.data.map((item) => ({
-                    applicationType: "Общежитие",
-                    dormitory: item.room?.dormitory?.name || "Не указано",
-                    roomType: item.room?.capacity || "—",
-                    firstName: user?.name?.split(" ")[0],
-                    lastName: user?.name?.split(" ")[1] || "",
+                    applicationType: t("myBookings.filters.dormitory"),
+                    dormitory: item.room?.dormitory?.name || "—",
+                    roomType: item.room?.room_number || "—",
                     file: item.attached_files?.length > 0,
                     id: item.id,
                     status: item.status,
@@ -48,7 +44,7 @@ const MyBookings = () => {
                 }));
 
                 const advisorBookings = advisorRes.data.map((item) => ({
-                    applicationType: "Эдвайзер",
+                    applicationType: t("myBookings.filters.advisor"),
                     id: item.id,
                     date: item.date,
                     time: item.time,
@@ -59,18 +55,14 @@ const MyBookings = () => {
                 }));
 
                 const asmedBookings = asmedRes.data.map((item) => ({
-                    applicationType: "АСМЕД",
+                    applicationType: t("myBookings.filters.asmed"),
                     id: item.id,
                     date: item.date,
                     time: item.time,
                     reason: item.reason,
                 }));
 
-                setBookings([
-                    ...dormBookings,
-                    ...advisorBookings,
-                    ...asmedBookings,
-                ]);
+                setBookings([...dormBookings, ...advisorBookings, ...asmedBookings]);
             } catch (error) {
                 console.error("Ошибка при загрузке бронирований:", error);
             } finally {
@@ -79,7 +71,7 @@ const MyBookings = () => {
         };
 
         if (user) fetchData();
-    }, [user]);
+    }, [user, t]);
 
     const handlePayment = async (bookingId) => {
         try {
@@ -123,23 +115,23 @@ const MyBookings = () => {
 
     const filteredBookings = useMemo(() => {
         if (filter === "all") return bookings;
-        return bookings.filter((b) => b.applicationType === filter);
-    }, [bookings, filter]);
+        return bookings.filter((b) => b.applicationType === t(`myBookings.filters.${filter}`));
+    }, [bookings, filter, t]);
 
     if (loading) {
         return (
             <div className="text-center mt-10">
-                <h1 className="text-2xl text-gray-600">Загрузка...</h1>
+                <h1 className="text-2xl text-gray-600">{t("myBookings.loading")}</h1>
             </div>
         );
     }
 
     return (
         <div className="max-w-6xl mx-auto mt-10 px-4 font-sans text-center">
-            <h1 className="text-4xl font-extrabold text-[#D50032] mb-8">Мои бронирования</h1>
+            <h1 className="text-4xl font-extrabold text-[#D50032] mb-8">{t("myBookings.title")}</h1>
 
             <div className="flex justify-center gap-3 flex-wrap mb-6">
-                {["all", "Общежитие", "Эдвайзер", "АСМЕД"].map((type) => (
+                {["all", "dormitory", "advisor", "asmed"].map((type) => (
                     <button
                         key={type}
                         onClick={() => setFilter(type)}
@@ -147,13 +139,13 @@ const MyBookings = () => {
                             filter === type ? "bg-[#D50032] text-white" : "bg-white text-gray-700"
                         }`}
                     >
-                        {type === "all" ? "Все" : type}
+                        {t(`myBookings.filters.${type}`)}
                     </button>
                 ))}
             </div>
 
             {filteredBookings.length === 0 ? (
-                <p className="text-gray-500">Нет записей для выбранного фильтра.</p>
+                <p className="text-gray-500">{t("myBookings.noBookings")}</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                     {filteredBookings.map((b, i) => (
@@ -165,27 +157,25 @@ const MyBookings = () => {
                             className="p-5 border bg-white shadow rounded-xl text-left"
                         >
                             <div className="flex items-center gap-2 text-lg font-semibold mb-3">
-                                {b.applicationType === "Общежитие" && <FaHome className="text-[#D50032]" />}
-                                {b.applicationType === "Эдвайзер" && <FaUser className="text-[#D50032]" />}
-                                {b.applicationType === "АСМЕД" && <FaHeartbeat className="text-[#D50032]" />}
+                                {b.applicationType === t("myBookings.filters.dormitory") && <FaHome className="text-[#D50032]" />}
+                                {b.applicationType === t("myBookings.filters.advisor") && <FaUser className="text-[#D50032]" />}
+                                {b.applicationType === t("myBookings.filters.asmed") && <FaHeartbeat className="text-[#D50032]" />}
                                 {b.applicationType}
                             </div>
 
                             <div className="text-sm text-gray-700 space-y-1">
-                                {b.applicationType === "Общежитие" && (
+                                {b.applicationType === t("myBookings.filters.dormitory") && (
                                     <>
-                                        <p><strong>Общежитие:</strong> {b.dormitory}</p>
-                                        <p><strong>Комната:</strong> {b.roomType}</p>
-                                        <p><strong>Файл:</strong> {b.file ? "Прикреплён" : "—"}</p>
+                                        <p><strong>{t("myBookings.labels.dormitory")}:</strong> {b.dormitory}</p>
+                                        <p><strong>{t("myBookings.labels.room")}:</strong> {b.roomType}</p>
+                                        <p><strong>{t("myBookings.labels.file")}:</strong> {b.file ? "✓" : "—"}</p>
                                         <div className="mt-4">
                                             {b.status === "pending" && (
-                                                <p className="text-yellow-600 font-semibold">⏳ Ваша заявка на
-                                                    рассмотрении</p>
+                                                <p className="text-yellow-600 font-semibold">{t("myBookings.status.pending")}</p>
                                             )}
                                             {b.status === "approved" && (
                                                 <>
-                                                    <p className="text-green-600 font-semibold mb-2">✅ Заявка
-                                                        одобрена!</p>
+                                                    <p className="text-green-600 font-semibold mb-2">{t("myBookings.status.approved")}</p>
                                                     {b.payment_status !== "paid" ? (
                                                         <button
                                                             onClick={() => {
@@ -194,52 +184,49 @@ const MyBookings = () => {
                                                             }}
                                                             className="bg-[#D50032] text-white px-4 py-2 rounded-full hover:bg-red-700 transition"
                                                         >
-                                                            Оплатить
+                                                            {t("myBookings.pay")}
                                                         </button>
                                                     ) : !b.contract_signed ? (
                                                         <div className="mt-4 bg-gray-50 border p-4 rounded-xl">
-                                                            <h4 className="font-bold mb-2 text-[#D50032]">📄 Договор</h4>
+                                                            <h4 className="font-bold mb-2 text-[#D50032]">{t("myBookings.contract.title")}</h4>
                                                             <p className="text-sm text-gray-600 mb-4">
-                                                                Я подтверждаю, что ознакомлен(а) с условиями проживания
-                                                                и обязуюсь соблюдать внутренние правила общежития Нархоз
-                                                                Университета.
+                                                                {t("myBookings.contract.description")}
                                                             </p>
                                                             <button
                                                                 onClick={() => handleSignContract(b.id)}
                                                                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
                                                             >
-                                                                Принять условия
+                                                                {t("myBookings.contract.accept")}
                                                             </button>
                                                         </div>
                                                     ) : (
                                                         <p className="text-sm text-green-700 font-medium mt-2 flex items-center gap-2">
-                                                            <FaCheckCircle className="text-green-600"/> Договор подписан
+                                                            <FaCheckCircle className="text-green-600"/> {t("myBookings.contract.signed")}
                                                         </p>
                                                     )}
                                                 </>
                                             )}
                                             {b.status === "rejected" && (
-                                                <p className="text-red-600 font-semibold">❌ Ваша заявка отклонена</p>
+                                                <p className="text-red-600 font-semibold">{t("myBookings.status.rejected")}</p>
                                             )}
                                         </div>
-
                                     </>
                                 )}
 
-                                {b.applicationType === "Эдвайзер" && (
+                                {b.applicationType === t("myBookings.filters.advisor") && (
                                     <>
-                                        <p><strong>Дата:</strong> {b.date}</p>
-                                        <p><strong>Время:</strong> {b.time}</p>
-                                        <p><strong>Школа:</strong> {b.school}</p>
-                                        <p><strong>Факультет:</strong> {b.faculty}</p>
+                                        <p><strong>{t("myBookings.labels.date")}:</strong> {b.date}</p>
+                                        <p><strong>{t("myBookings.labels.time")}:</strong> {b.time}</p>
+                                        <p><strong>{t("myBookings.labels.school")}:</strong> {b.school}</p>
+                                        <p><strong>{t("myBookings.labels.faculty")}:</strong> {b.faculty}</p>
                                     </>
                                 )}
 
-                                {b.applicationType === "АСМЕД" && (
+                                {b.applicationType === t("myBookings.filters.asmed") && (
                                     <>
-                                        <p><strong>Дата:</strong> {b.date}</p>
-                                        <p><strong>Время:</strong> {b.time}</p>
-                                        <p><strong>Причина:</strong> {b.reason}</p>
+                                        <p><strong>{t("myBookings.labels.date")}:</strong> {b.date}</p>
+                                        <p><strong>{t("myBookings.labels.time")}:</strong> {b.time}</p>
+                                        <p><strong>{t("myBookings.labels.reason")}:</strong> {b.reason}</p>
                                     </>
                                 )}
                             </div>

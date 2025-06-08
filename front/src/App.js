@@ -18,7 +18,7 @@ import AsmedBookingPage from "./pages/AsmedBookingPage";
 import PrivateRoute from "./components/PrivateRoute";
 import { AnimatePresence, motion } from "framer-motion";
 import { ToastContainer } from "react-toastify";
-import AdviserMainPage from "./pages/ AdviserMainPage";
+import AdviserMainPage from "./pages/AdviserMainPage";
 
 const theme = createTheme({
     typography: {

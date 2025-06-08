@@ -22,7 +22,7 @@ const advisersData = [
         facultyLogo: "/faculty/front.png"
     },
     {
-        window: "№ 7",
+        window: "№ 4",
         title: "Менеджер по финансовым и социальным вопросам",
         managers: ["Аймаханова Куралай"],
         facultyLogo: "/faculty/front.png"
@@ -55,7 +55,7 @@ const advisersData = [
         facultyLogo: "/faculty/economics.png"
     },
     {
-        window: "№ 8",
+        window: "№ 7",
         title: "Эдвайзер",
         advisers: ["Анарбаева Айгерим"],
         specialties: [
@@ -67,7 +67,7 @@ const advisersData = [
         facultyLogo: "/faculty/marketing.png"
     },
     {
-        window: "№ 9",
+        window: "№ 8 ",
         title: "Эдвайзер",
         advisers: ["Скакова Салтанат"],
         specialties: [

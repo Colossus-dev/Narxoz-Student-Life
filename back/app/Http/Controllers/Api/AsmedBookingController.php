@@ -24,11 +24,13 @@ class AsmedBookingController extends Controller
     {
         $validated = $request->validate([
             'date' => 'required|date',
+            'iin' => 'required|string|max:12',
             'time' => 'required|string',
             'reason' => 'required|string|max:1000',
         ]);
 
         $exists = AsmedBooking::where('user_id', $request->user()->id)
+            ->where('iin', $validated['iin'])
             ->where('date', $validated['date'])
             ->where('time', $validated['time'])
             ->exists();
@@ -39,6 +41,7 @@ class AsmedBookingController extends Controller
 
         $booking = AsmedBooking::create([
             'user_id' => $request->user()->id,
+            'iin' => $validated['iin'],
             'date' => $validated['date'],
             'time' => $validated['time'],
             'reason' => $validated['reason'],
